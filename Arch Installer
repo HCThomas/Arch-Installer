@@ -1,0 +1,95 @@
+#!/bin/bash
+
+### Choose Profile ###
+profile=$(dialog --stdout --menu "Profile" 0 0 0 1 VirtualBox 2 Desktop 3 Other) || exit 1
+clear
+if [ $profile -eq 1 ]; then
+hostname="ArchVB"
+user="holden"
+password="0"
+device="/dev/sda"
+cpu=1
+nvidia_drivers=0
+virtual_box=1
+fi
+if [ $profile -eq 2 ]; then
+hostname="ArchDT"
+user="holden"
+password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
+clear
+: ${password:?"password cannot be empty"}
+password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
+clear
+[[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
+devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
+device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
+clear
+cpu=1
+nvidia_drivers=1
+virtual_box=0
+fi
+if [ $profile -eq 3 ]; then
+hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
+clear
+: ${hostname:?"hostname cannot be empty"}
+user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
+clear
+: ${user:?"user cannot be empty"}
+password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
+clear
+: ${password:?"password cannot be empty"}
+password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
+clear
+[[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
+devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
+device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
+clear
+cpu=$(dialog --stdout --menu "Select cpu" 0 0 0 1 intel 2 amd) || exit 1
+clear
+nvidia_drivers=$(dialog --stdout --menu "Install nvidia drivers" 0 0 0 1 yes 2 no) || exit 1
+clear
+virtual_box=0
+fi
+
+timedatectl set-ntp true
+
+### Setup the disk and partitions ###
+echo -e "n\np\n\n\n\na\n  w\n" | fdisk $device  
+part_linux="${device}1"
+mkfs.ext4 $part_linux
+mount $part_linux /mnt
+
+### Install the basic system ###
+pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub htop neofetch
+if [ $cpu -eq 1 ]; then pacstrap /mnt intel-ucode; else pacstrap /mnt amd-ucode; fi
+if [ $nvidia_drivers -eq 1 ]; then pacstrap /mnt nvidia; fi
+if [ $virtual_box -eq 1 ]; then pacstrap /mnt virtualbox-guest-utils; fi
+
+### Configure the basic system ###
+genfstab -U /mnt >> /etc/fstab
+ln -sf /mnt/usr/share/zoneinfo/America/New_York /mnt/etc/localtime
+arch-chroot /mnt hwclock --systohc
+sed -i "176 s/^##*//" /mnt/etc/locale.gen
+arch-chroot /mnt locale-gen
+echo LANG=en_US.UTF-8 >> /mnt/etc/locale.conf
+echo $hostname >> /mnt/etc/hostname
+echo -e "127.0.0.1\tlocalhost\n::1\t\tlocalhost\n127.0.1.1\t${hostname}.localdomain\t${hostname}" >> /mnt/etc/hosts
+arch-chroot /mnt systemctl enable NetworkManager
+if [ $virtual_box -eq 1 ]; then arch-chroot /mnt systemctl enable vboxservice; fi
+sed -i "33 s/^##*//;92,93 s/^##*//" /mnt/etc/pacman.conf
+sed -i "37i ILoveCandy" /mnt/etc/pacman.conf
+arch-chroot /mnt pacman -Syu
+
+### Grub boot loader ###
+arch-chroot /mnt grub-install --target=i386-pc $device
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+sed -i "/GRUB_TIMEOUT=5/c\GRUB_TIMEOUT=0" /mnt/etc/default/grub
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+### Users ###
+arch-chroot /mnt useradd -m -G wheel $user
+sed -i "82 s/^##*//" /mnt/etc/sudoers
+echo -e "${password}\n${password}" | arch-chroot /mnt passwd
+echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
+
+shutdown now

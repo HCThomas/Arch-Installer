@@ -12,7 +12,7 @@ cd yay
 makepkg -si
 ```
 
-## DKE
+## KDE
 ```
 sudo pacman -S plasma konsole dolphine code xdg-user-dirs
 yay -S brave-bin

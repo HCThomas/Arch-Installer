@@ -10,11 +10,12 @@ curl -sL https://git.io/JJuf2 | bash
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
-cd
 ```
 
-## User Dir
+## DKE
 ```
-sudo pacman -S xdg-user-dirs
+sudo pacman -S plasma konsole dolphine code xdg-user-dirs
+yay -S brave-bin
 xdg-user-dirs-update
+sudo systemctl enable sddm
 ```

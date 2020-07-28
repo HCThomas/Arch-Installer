@@ -1,6 +1,7 @@
 #!/bin/bash
 
 ### Choose Profile ###
+part_layout=1
 profile=$(dialog --stdout --menu "Profile" 0 0 0 1 VirtualBox 2 Desktop 3 Other) || exit 1
 clear
 if [ $profile -eq 1 ]; then
@@ -54,10 +55,20 @@ fi
 timedatectl set-ntp true
 
 ### Setup the disk and partitions ###
-echo -e "n\np\n\n\n\na\n  w\n" | fdisk $device  
+if [ $part_layout -eq 1 ]; then
+echo -e "n\np\n\n\n\na\n  w\n" | fdisk $device
 part_linux="${device}1"
 mkfs.ext4 $part_linux
+mount $part_linux /mnt; fi
+if [ $part_layout -eq 2 ]; then
+echo -e "g\n  n\n\n\n+512M\nt\n19\n  n\n\n\n\n  w\n" | fdisk $device
+part_boot="${device}1"
+part_linux="${device}2"
+mkfs.fat -F 32 $part_boot
+mkfs.ext4 $part_linux
 mount $part_linux /mnt
+mkdir /mnt/boot
+mount %part_boot /mnt/boot; fi
 
 ### Install the basic system ###
 pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub htop neofetch
@@ -83,7 +94,11 @@ sed -i "37i ILoveCandy" /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Syu
 
 ### Grub boot loader ###
-arch-chroot /mnt grub-install --target=i386-pc $device
+if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
+if [ $part_layout -eq 2 ]; then
+if [ $virtual_box -eq 1 ]; then grub-install --target=x86_64-efi --efi-directory=esp --removable; else
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
+fi
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 sed -i "/GRUB_TIMEOUT=5/c\GRUB_TIMEOUT=0" /mnt/etc/default/grub
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg

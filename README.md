@@ -19,3 +19,4 @@ yay -S brave-bin
 xdg-user-dirs-update
 sudo systemctl enable sddm
 ```
+*Shortcut fix `mkdir ~/.local/share/kglobalaccel`

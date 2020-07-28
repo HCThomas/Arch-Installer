@@ -1,8 +1,9 @@
 #!/bin/bash
 
 ### Choose Profile ###
-part_layout=1
 profile=$(dialog --stdout --menu "Profile" 0 0 0 1 VirtualBox 2 Desktop 3 Other) || exit 1
+clear
+part_layout=$(dialog --stdout --menu "Partition Scheme" 0 0 0 1 "DOS - root" 2 "UEFI - boot/root) || exit 1
 clear
 if [ $profile -eq 1 ]; then
 hostname="ArchVB"

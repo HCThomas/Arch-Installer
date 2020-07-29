@@ -62,7 +62,7 @@ part_linux="${device}1"
 mkfs.ext4 $part_linux
 mount $part_linux /mnt; fi
 if [ $part_layout -eq 2 ]; then
-echo -e "g\n  n\n\n\n+512M\nt\n19\n  n\n\n\n\n  w\n" | fdisk $device
+echo -e "g\n  n\n\n\n+512M\nt\n1\n  n\n\n\n\n  w\n" | fdisk $device
 part_boot="${device}1"
 part_linux="${device}2"
 mkfs.fat -F 32 $part_boot

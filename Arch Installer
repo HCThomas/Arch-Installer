@@ -76,6 +76,7 @@ pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo netw
 if [ $cpu -eq 1 ]; then pacstrap /mnt intel-ucode; else pacstrap /mnt amd-ucode; fi
 if [ $nvidia_drivers -eq 1 ]; then pacstrap /mnt nvidia; fi
 if [ $virtual_box -eq 1 ]; then pacstrap /mnt virtualbox-guest-utils; fi
+if [ $part_layout -eq 2 ]; then pacstrap /mnt efibootmgr; fi
 
 ### Configure the basic system ###
 genfstab -U /mnt >> /etc/fstab

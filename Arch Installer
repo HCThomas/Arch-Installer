@@ -98,7 +98,7 @@ arch-chroot /mnt pacman -Syu
 ### Grub boot loader ###
 if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
 if [ $part_layout -eq 2 ]; then
-if [ $virtual_box -eq 1 ]; then grub-install --target=x86_64-efi --efi-directory=boot --removable; else
+if [ $virtual_box -eq 1 ]; then grub-install --target=x86_64-efi --efi-directory=boot; else #--removable; else
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
 fi
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
@@ -111,4 +111,4 @@ sed -i "82 s/^##*//" /mnt/etc/sudoers
 echo -e "${password}\n${password}" | arch-chroot /mnt passwd
 echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
 
-shutdown now
+#shutdown now

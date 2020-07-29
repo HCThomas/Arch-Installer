@@ -111,4 +111,4 @@ sed -i "82 s/^##*//" /mnt/etc/sudoers
 echo -e "${password}\n${password}" | arch-chroot /mnt passwd
 echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
 
-#shutdown now
+shutdown now

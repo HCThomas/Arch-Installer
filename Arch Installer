@@ -96,12 +96,12 @@ sed -i "37i ILoveCandy" /mnt/etc/pacman.conf
 arch-chroot /mnt pacman -Syu
 
 ### Grub boot loader ###
-#if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
-#if [ $part_layout -eq 2 ]; then
-#if [ $virtual_box -eq 1 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable; else
-#arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
-#fi
-#arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
+if [ $part_layout -eq 2 ]; then
+if [ $virtual_box -eq 1 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; else ## --removable; else
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
+fi
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 #sed -i "/GRUB_TIMEOUT=5/c\GRUB_TIMEOUT=0" /mnt/etc/default/grub
 #arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 

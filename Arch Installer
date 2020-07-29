@@ -69,7 +69,7 @@ mkfs.fat -F 32 $part_boot
 mkfs.ext4 $part_linux
 mount $part_linux /mnt
 mkdir /mnt/boot
-mount %part_boot /mnt/boot; fi
+mount $part_boot /mnt/boot; fi
 
 ### Install the basic system ###
 pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub htop neofetch
@@ -98,7 +98,7 @@ arch-chroot /mnt pacman -Syu
 ### Grub boot loader ###
 if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
 if [ $part_layout -eq 2 ]; then
-if [ $virtual_box -eq 1 ]; then arch-chroot grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; else #--removable; else
+if [ $virtual_box -eq 1 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; else #--removable; else
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
 fi
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg

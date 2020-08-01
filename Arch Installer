@@ -7,6 +7,7 @@ read profile
 echo -en "1.\tDos-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
 read part_layout
 : "${part_layout:?"Missing Part Layout"}"
+
 if [ $profile -eq 1 ]; then
 hostname="ArchVB"
 user="holden"
@@ -16,6 +17,7 @@ cpu=1
 nvidia_drivers=0
 virtual_box=1
 fi
+
 if [ $profile -eq 2 ]; then
 hostname="ArchDT"
 user="holden"
@@ -34,6 +36,7 @@ cpu=1
 nvidia_drivers=1
 virtual_box=0
 fi
+
 if [ $profile -eq 3 ]; then
 echo -n "Enter hostname: "
 read hostname

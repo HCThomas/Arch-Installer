@@ -4,7 +4,7 @@
 echo -en "1.\tVirtualBox\n2.\tDesktop\n3.\tOther\nEnter Profile: "
 read profile
 : "${profile:?"Missing Profile"}"
-echo -en "1.\tDos-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
+echo -en "1.\tDOS-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
 read part_layout
 : "${part_layout:?"Missing Part Layout"}"
 
@@ -32,6 +32,7 @@ echo
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 echo -en $devicelist "\nEnter installation disk: "
 read device
+: ${device:?"Device cannot be empty"}
 cpu=1
 nvidia_drivers=1
 virtual_box=0
@@ -55,6 +56,7 @@ echo
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 echo -en $devicelist "\nEnter installation disk: "
 read device
+: ${device:?"Device cannot be empty"}
 echo -en "1.\tIntel\n2.\tAMD\n\nSelect CPU: "
 read cpu
 : ${cpu:?"CPU cannot be empty"}

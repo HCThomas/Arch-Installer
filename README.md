@@ -20,3 +20,8 @@ xdg-user-dirs-update
 sudo systemctl enable sddm
 ```
 * Shortcut fix `mkdir ~/.local/share/kglobalaccel`
+
+## i3
+```
+sudo pacman -S xorg-server xorg-xinit i3-gaps i3blocks i3lock i3status feh rxvt-unicode dmenu noto-fonts network-manager-applet pulseaudio pamixer ranger w3m
+```

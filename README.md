@@ -2,7 +2,8 @@
 
 ## Start Installer
 ```
-curl -sL https://git.io/JJuf2 | bash
+curl -L https://git.io/JJuf2 > install
+bash install
 ```
 
 ## Install AUR yay

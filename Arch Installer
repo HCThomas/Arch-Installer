@@ -3,10 +3,10 @@
 ### Choose Profile ###
 echo -en "1.\tVirtualBox\n2.\tDesktop\n3.\tOther\nEnter Profile: "
 read profile
-if ["$profile" == "" ]; then echo "Profile can't be empty"; exit 1; fi
+if [ "$profile" == "" ]; then echo "Profile can't be empty"; exit 1; fi
 echo -en "1.\tDOS-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
 read part_layout
-if ["$part_layout" == "" ]; then echo "Part layout can't be empty"; exit 1; fi
+if [ "$part_layout" == "" ]; then echo "Part layout can't be empty"; exit 1; fi
 
 if [ $profile -eq 1 ]; then
 hostname="ArchVB"
@@ -23,7 +23,7 @@ hostname="ArchDT"
 user="holden"
 echo -n "Password: "
 read -s password
-if ["$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
+if [ "$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
 echo
 echo -n "Repeat Password: "
 read -s password2
@@ -32,7 +32,7 @@ if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1;
 lsblk
 echo -en "Enter installation disk: "
 read device
-if ["$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
+if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
 cpu=1
 nvidia_drivers=1
 virtual_box=0
@@ -41,13 +41,13 @@ fi
 if [ $profile -eq 3 ]; then
 echo -n "Enter hostname: "
 read hostname
-if ["$hostname" == "" ]; then echo "Hostname can't be empty"; exit 1; fi
+if [ "$hostname" == "" ]; then echo "Hostname can't be empty"; exit 1; fi
 echo -n "Enter admin username: "
 read user
-if ["$user" == "" ]; then echo "User can't be empty"; exit 1; fi
+if [ "$user" == "" ]; then echo "User can't be empty"; exit 1; fi
 echo -n "Password: "
 read -s password
-if ["$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
+if [ "$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
 echo
 echo -n "Repeat Password: "
 read -s password2
@@ -55,13 +55,13 @@ if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1;
 lsblk
 echo -en "\nEnter installation disk: "
 read device
-if ["$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
+if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
 echo -en "1.\tIntel\n2.\tAMD\n\nSelect CPU: "
 read cpu
-if ["$cpu" == "" ]; then echo "CPU can't be empty"; exit 1; fi
+if [ "$cpu" == "" ]; then echo "CPU can't be empty"; exit 1; fi
 echo -en "1\tYes\n2\tNo\nInstall nvidia drivers: "
 read nvidia_drivers
-if ["$nvidia_drivers" == "" ]; then echo "Nvidia drivers can't be empty"; exit 1; fi
+if [ "$nvidia_drivers" == "" ]; then echo "Nvidia drivers can't be empty"; exit 1; fi
 virtual_box=0
 fi
 

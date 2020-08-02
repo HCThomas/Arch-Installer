@@ -24,5 +24,5 @@ sudo systemctl enable sddm
 
 ## i3
 ```
-sudo pacman -S xorg-server xorg-xinit i3-gaps i3blocks i3lock i3status feh rxvt-unicode dmenu noto-fonts network-manager-applet pulseaudio pamixer ranger w3m
+sudo pacman -S xorg-server xorg-xinit i3-gaps i3blocks i3lock feh rxvt-unicode dmenu noto-fonts pulseaudio pamixer ranger w3m
 ```

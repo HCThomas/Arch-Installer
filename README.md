@@ -16,7 +16,7 @@ makepkg -si
 ## KDE
 ```
 sudo pacman -S plasma konsole dolphine code xdg-user-dirs
-yay -S brave-beta-bin
+yay -S brave-bin
 xdg-user-dirs-update
 sudo systemctl enable sddm
 ```

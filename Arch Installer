@@ -29,7 +29,7 @@ echo -n "Repeat Password: "
 read -s password2
 echo
 if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
-lsblk
+lsblk -p
 echo -en "Enter installation disk: "
 read device
 if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
@@ -52,7 +52,7 @@ echo
 echo -n "Repeat Password: "
 read -s password2
 if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
-lsblk
+lsblk -p
 echo -en "\nEnter installation disk: "
 read device
 if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi

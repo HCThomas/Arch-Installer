@@ -28,7 +28,7 @@ echo
 echo -n "Repeat Password: "
 read -s password2
 echo
-[[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
+if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 echo -en $devicelist "\nEnter installation disk: "
 read device
@@ -52,7 +52,7 @@ echo
 echo -n "Repeat Password: "
 read -s password2
 echo
-[[ "$password" == "$password2" ]] || ( echo "Passwords did not match"; exit 1; )
+if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
 devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
 echo -en $devicelist "\nEnter installation disk: "
 read device

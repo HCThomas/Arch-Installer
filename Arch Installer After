@@ -1,11 +1,13 @@
 #!/bin/bash
 
-cd
+read -p "1.\ti3\n2.\tKDE\n3.\tDeepin\n0.\tNone\nChoose Desktop Enviornment: " desktop_env
+
+cd ~
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
-cd
+cd ~
 git init
 git remote add origin https://github.com/HCThomas/dotfiles
 git fetch
@@ -15,4 +17,18 @@ sudo pacman -S neofetch htop urxvt-unicode urxvt-perls xorg-server
 yay -S brave-bin
 
 source .bashrc
-vim -c PlugInstall .vimrc
+vim -c PlugInstall -c q -c q .vimrc
+
+if [ $desktop_env -eq 1]; then
+sudo pacman -S xorg-xinit i3-gaps i3blocks noto-fonts pulseaudio pamixer dmenu feh ranger w3m
+fi
+if [ $desktop_env -eq 2]; then
+sudo pacman -S plasma konsole dolphine xdg-user-dirs
+xdg-user-dirs-update
+sudo systemctl enable sddm
+mkdir -p ~/.local/share/kglobalaccel
+fi
+if [ $desktop_env -eq 3]; then
+sudo pacman -S deepin deepin-terminal
+sudo sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-deepin-greeter/' /etc/lightdm/lightdm.conf
+fi

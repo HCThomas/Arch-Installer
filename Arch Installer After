@@ -1,0 +1,18 @@
+#!/bin/bash
+
+cd
+git clone https://aur.archlinux.org/yay.git
+cd yay
+makepkg -si
+
+cd
+git init
+git remote add origin https://github.com/HCThomas/dotfiles
+git fetch
+git checkout -ft origin/master
+
+sudo pacman -S neofetch htop urxvt-unicode urxvt-perls xorg-server
+yay -S brave-bin
+
+source .bashrc
+vim -c PlugInstall .vimrc

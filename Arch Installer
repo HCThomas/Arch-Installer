@@ -92,9 +92,7 @@ if [ $part_layout -eq 2 ]; then pacstrap /mnt efibootmgr; fi
 
 ### Configure the basic system ###
 genfstab -U /mnt >> /etc/fstab
-if [ $virtual_box -eq 1 ]; then 
-ln -sf /mnt/usr/share/zoneinfo/UTC /mnt/etc/localtime; else
-ln -sf /mnt/usr/share/zoneinfo/America/New_York /mnt/etc/localtime; fi
+ln -sf /mnt/usr/share/zoneinfo/America/New_York /mnt/etc/localtime
 arch-chroot /mnt hwclock --systohc
 sed -i "176 s/^##*//" /mnt/etc/locale.gen
 arch-chroot /mnt locale-gen

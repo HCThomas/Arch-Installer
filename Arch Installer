@@ -84,7 +84,7 @@ mkdir /mnt/boot
 mount $part_boot /mnt/boot; fi
 
 ### Install the basic system ###
-pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub htop neofetch
+pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub
 if [ $cpu -eq 1 ]; then pacstrap /mnt intel-ucode; else pacstrap /mnt amd-ucode; fi
 if [ $nvidia_drivers -eq 1 ]; then pacstrap /mnt nvidia; fi
 if [ $virtual_box -eq 1 ]; then pacstrap /mnt virtualbox-guest-utils; fi

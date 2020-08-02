@@ -28,6 +28,7 @@ fi
 if [ $desktop_env -eq 3]; then
 sudo pacman -S deepin deepin-terminal
 sudo sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-deepin-greeter/' /etc/lightdm/lightdm.conf
+sudo systemctl enable lightdm
 fi
 
 source .bashrc

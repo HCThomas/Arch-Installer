@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -en "1.\ti3\n2.\tKDE\n3.\tDeepin\nChoose Desktop Enviornment: "
+echo -en "1.\ti3\n2.\tKDE\n3.\tDeepin\n0.\tNone\nChoose Desktop Enviornment: "
 read desktop_env
 
 cd ~

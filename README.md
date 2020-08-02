@@ -11,12 +11,6 @@ curl -L https://git.io/JJw8r > install
 bash install
 rm install
 ```
-## Install AUR yay
-```
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-```
 
 ## KDE
 ```

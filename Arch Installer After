@@ -33,4 +33,4 @@ fi
 
 vim -c PlugInstall -c q -c q .vimrc
 clear
-echo "source .bashrc"
+echo "source .bashrc and remove installer"

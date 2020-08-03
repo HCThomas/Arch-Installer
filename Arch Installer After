@@ -31,6 +31,6 @@ sudo sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-deepin
 sudo systemctl enable lightdm
 fi
 
-source .bashrc
 vim -c PlugInstall -c q -c q .vimrc
 clear
+echo "source .bashrc"

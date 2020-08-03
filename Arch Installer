@@ -71,6 +71,7 @@ virtual_box=0
 fi
 
 timedatectl set-ntp true
+sleep 5
 
 ### Setup the disk and partitions ###
 if [ $part_layout -eq 1 ]; then

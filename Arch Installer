@@ -7,6 +7,11 @@ if [ "$profile" == "" ]; then echo "Profile can't be empty"; exit 1; fi
 echo -en "1.\tDOS-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
 read part_layout
 if [ "$part_layout" == "" ]; then echo "Part layout can't be empty"; exit 1; fi
+if [ "$part_layout" -eq 2 ]; then 
+echo -en "1.\tNormal\n2.\tRemovable\nEnter UEFI location: "
+read uefi_loca
+if [ "$uefi_loca" == "" ]; then echo "UEFI location can't be empty"; exit 1; fi
+fi
 
 if [ $profile -eq 1 ]; then
 hostname="ArchVB"
@@ -107,7 +112,10 @@ arch-chroot /mnt pacman -Syu
 
 ### Grub boot loader ###
 if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
-if [ $part_layout -eq 2 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
+if [ $part_layout -eq 2 ]; then 
+if [ "$uefi_loca" -eq 1 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
+if [ "$uefi_loca" -eq 2 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable; fi
+fi
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 sed -i "/GRUB_TIMEOUT=5/c\GRUB_TIMEOUT=0" /mnt/etc/default/grub
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg

@@ -8,7 +8,7 @@ echo -en "1.\tDOS-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
 read part_layout
 if [ "$part_layout" == "" ]; then echo "Part layout can't be empty"; exit 1; fi
 if [ "$part_layout" -eq 2 ]; then 
-echo -en "1.\tNormal\n2.\tRemovable\nEnter UEFI location: "
+echo -en "1.\tNormal(VB)\n2.\tRemovable(DT)\nEnter UEFI location: "
 read uefi_loca
 if [ "$uefi_loca" == "" ]; then echo "UEFI location can't be empty"; exit 1; fi
 fi

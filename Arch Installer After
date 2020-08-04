@@ -18,7 +18,7 @@ sudo pacman -S neofetch htop rxvt-unicode urxvt-perls xorg-server
 yay -S brave-bin
 if [ $desktop_env -eq 1 ]; then
 sudo pacman -S xorg-xinit i3-gaps i3blocks noto-fonts pulseaudio pamixer network-manager-applet notification-daemon dmenu feh ranger w3m
-sudo echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" >> /usr/share/dbus-1/services/org.freedesktop.Notifications.service
+echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 fi
 if [ $desktop_env -eq 2 ]; then
 sudo pacman -S plasma konsole dolphin xdg-user-dirs

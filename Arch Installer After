@@ -17,7 +17,7 @@ git checkout -ft origin/master
 sudo pacman -S neofetch htop rxvt-unicode urxvt-perls xorg-server
 yay -S brave-bin
 if [ $desktop_env -eq 1 ]; then
-sudo pacman -S xorg-xinit i3-gaps i3blocks noto-fonts otf-openmoji xclip pulseaudio pamixer dmenu feh ranger w3m
+sudo pacman -S xorg-xinit i3-gaps i3blocks noto-fonts pulseaudio pamixer dmenu feh ranger w3m
 fi
 if [ $desktop_env -eq 2 ]; then
 sudo pacman -S plasma konsole dolphin xdg-user-dirs

@@ -3,29 +3,39 @@
 echo -en "1.\ti3\n2.\tKDE\n3.\tDeepin\n0.\tNone\nChoose Desktop Enviornment: "
 read desktop_env
 
+### AUR Yay ###
 cd ~
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
 
+### Clone dotfiles ###
 cd ~
 git init
 git remote add origin https://github.com/HCThomas/dotfiles
 git fetch
 git checkout -ft origin/master
 
+### Install Basic Applications ###
 sudo pacman -S neofetch htop rxvt-unicode urxvt-perls xorg-server
 yay -S brave-bin
+
+### Install Desktop Enviornment ###
+# i3
 if [ $desktop_env -eq 1 ]; then
 sudo pacman -S xorg-xinit i3-gaps i3blocks noto-fonts pulseaudio pamixer network-manager-applet notification-daemon dmenu feh ranger w3m
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 fi
+
+# KDE
 if [ $desktop_env -eq 2 ]; then
 sudo pacman -S plasma konsole dolphin xdg-user-dirs
 xdg-user-dirs-update
 sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
 fi
+
+# Deepin
 if [ $desktop_env -eq 3 ]; then
 sudo pacman -S deepin deepin-terminal
 sudo sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-deepin-greeter/' /etc/lightdm/lightdm.conf

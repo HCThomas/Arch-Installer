@@ -143,8 +143,8 @@ arch-chroot /mnt pacman -Syu
 if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
 
 if [ $part_layout -eq 2 ]; then 
-if [ "$uefi_loca" -eq 1 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
-if [ "$uefi_loca" -eq 2 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable; fi
+if [ "$uefi_location" -eq 1 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
+if [ "$uefi_location" -eq 2 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable; fi
 fi
 
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg

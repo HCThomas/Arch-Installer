@@ -2,6 +2,7 @@
 
 echo -en "1.\ti3\n2.\tKDE\n3.\tDeepin\n0.\tNone\nChoose Desktop Enviornment: "
 read desktop_env
+if [ $desktop_env == "" ]; then echo "Desktop Enviornment can't be empty"; exit 1; fi
 
 ### AUR Yay ###
 cd ~

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo -en "1.\ti3\n2.\tKDE\n3.\tDeepin\n0.\tNone\nChoose Desktop Enviornment: "
+echo -en "1.\ti3\n2.\tKDE\n3.\tDeepin\n4.\tGNOME\n0.\tNone\nChoose Desktop Enviornment: "
 read desktop_env
 if [ "$desktop_env" == "" ]; then echo "Desktop Enviornment can't be empty"; exit 1; fi
 
@@ -41,6 +41,12 @@ if [ $desktop_env -eq 3 ]; then
 sudo pacman -S deepin deepin-terminal
 sudo sed -i 's/#greeter-session=example-gtk-gnome/greeter-session=lightdm-deepin-greeter/' /etc/lightdm/lightdm.conf
 sudo systemctl enable lightdm
+fi
+
+# GNOME
+if [ $desktop_env -eq 3 ]; then
+sudo pacman -S gnome gnome-tweaks
+sudo systemctl enable gdm
 fi
 
 vim -c PlugInstall -c q -c q .vimrc

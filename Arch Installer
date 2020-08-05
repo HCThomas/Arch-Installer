@@ -1,31 +1,41 @@
 #!/bin/bash
 
-### Choose Profile ###
-echo -en "1.\tVirtualBox\n2.\tDesktop\n3.\tOther\nEnter Profile: "
+########## Choose Profile ##########
+## Profile Require
+# hostname,user,password(" ")
+# device(/dev/sd*)
+# part_layout(1-dos root,2-UEFI boot/root), uefi_location (if UEFI part_layout=2)(1-normal,2-removable)
+# cpu(1-intel,2-amd)
+# nvidia_drivers,virtual_box (1-yes,0-no)
+##
+
+echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "
 read profile
 if [ "$profile" == "" ]; then echo "Profile can't be empty"; exit 1; fi
-echo -en "1.\tDOS-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
-read part_layout
-if [ "$part_layout" == "" ]; then echo "Part layout can't be empty"; exit 1; fi
-if [ "$part_layout" -eq 2 ]; then 
-echo -en "1.\tNormal(VB)\n2.\tRemovable(DT)\nEnter UEFI location: "
-read uefi_loca
-if [ "$uefi_loca" == "" ]; then echo "UEFI location can't be empty"; exit 1; fi
-fi
 
+### VirtualBox ###
 if [ $profile -eq 1 ]; then
 hostname="ArchVB"
 user="holden"
 password="0"
 device="/dev/sda"
+part_layout=2
+uefi_location=1
 cpu=1
 nvidia_drivers=0
 virtual_box=1
 fi
 
+### Desktop ###
 if [ $profile -eq 2 ]; then
 hostname="ArchDT"
 user="holden"
+part_layout=2
+uefi_location=2
+cpu=1
+nvidia_drivers=1
+virtual_box=0
+
 echo -n "Password: "
 read -s password
 if [ "$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
@@ -34,22 +44,25 @@ echo -n "Repeat Password: "
 read -s password2
 echo
 if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
+
 lsblk -p
 echo -en "Enter installation disk: "
 read device
 if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
-cpu=1
-nvidia_drivers=1
-virtual_box=0
 fi
 
-if [ $profile -eq 3 ]; then
+### Other ###
+if [ $profile -eq 0 ]; then
+virtual_box=0
+
 echo -n "Enter hostname: "
 read hostname
 if [ "$hostname" == "" ]; then echo "Hostname can't be empty"; exit 1; fi
+
 echo -n "Enter admin username: "
 read user
 if [ "$user" == "" ]; then echo "User can't be empty"; exit 1; fi
+
 echo -n "Password: "
 read -s password
 if [ "$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
@@ -57,19 +70,31 @@ echo
 echo -n "Repeat Password: "
 read -s password2
 if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
+
 lsblk -p
 echo -en "\nEnter installation disk: "
 read device
 if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
+
+echo -en "1.\tDOS-root\n2.\tUEFI-boot/root\nEnter Part Layout: "
+read part_layout
+if [ "$part_layout" == "" ]; then echo "Part layout can't be empty"; exit 1; fi
+if [ "$part_layout" -eq 2 ]; then 
+echo -en "1.\tNormal\n2.\tRemovable\nEnter UEFI location: "
+read uefi_location
+if [ "$uefi_location" == "" ]; then echo "UEFI location can't be empty"; exit 1; fi
+fi
+
 echo -en "1.\tIntel\n2.\tAMD\n\nSelect CPU: "
 read cpu
 if [ "$cpu" == "" ]; then echo "CPU can't be empty"; exit 1; fi
+
 echo -en "1\tYes\n2\tNo\nInstall nvidia drivers: "
 read nvidia_drivers
 if [ "$nvidia_drivers" == "" ]; then echo "Nvidia drivers can't be empty"; exit 1; fi
-virtual_box=0
 fi
 
+########## Start Install ##########
 timedatectl set-ntp true
 sleep 5
 
@@ -78,7 +103,9 @@ if [ $part_layout -eq 1 ]; then
 echo -e "n\np\n\n\n\na\n  w\n" | fdisk $device
 part_linux="${device}1"
 mkfs.ext4 $part_linux
-mount $part_linux /mnt; fi
+mount $part_linux /mnt
+fi
+
 if [ $part_layout -eq 2 ]; then
 echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n\n  w\n" | fdisk $device
 part_boot="${device}1"
@@ -87,7 +114,8 @@ mkfs.fat -F 32 $part_boot
 mkfs.ext4 $part_linux
 mount $part_linux /mnt
 mkdir /mnt/boot
-mount $part_boot /mnt/boot; fi
+mount $part_boot /mnt/boot
+fi
 
 ### Install the basic system ###
 pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub
@@ -113,10 +141,12 @@ arch-chroot /mnt pacman -Syu
 
 ### Grub boot loader ###
 if [ $part_layout -eq 1 ]; then arch-chroot /mnt grub-install --target=i386-pc $device; fi
+
 if [ $part_layout -eq 2 ]; then 
 if [ "$uefi_loca" -eq 1 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB; fi
 if [ "$uefi_loca" -eq 2 ]; then arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable; fi
 fi
+
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 sed -i "/GRUB_TIMEOUT=5/c\GRUB_TIMEOUT=0" /mnt/etc/default/grub
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg

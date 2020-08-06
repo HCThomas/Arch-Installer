@@ -152,7 +152,7 @@ sed -i "/GRUB_TIMEOUT=5/c\GRUB_TIMEOUT=0" /mnt/etc/default/grub
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 ### Users ###
-arch-chroot /mnt useradd -m -G wheel $user
+arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
 sed -i "82 s/^##*//" /mnt/etc/sudoers
 echo -e "${password}\n${password}" | arch-chroot /mnt passwd
 echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user

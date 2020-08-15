@@ -35,8 +35,7 @@ if [ "$user" == "" ]; then echo "User can't be empty"; exit 1; fi
 echo -n "Password: "
 read -s password
 if [ "$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
-echo
-echo -n "Repeat Password: "
+echo -en "\nRepeat Password: "
 read -s password2
 if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
 

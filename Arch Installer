@@ -87,7 +87,8 @@ arch-chroot /mnt systemctl enable NetworkManager
 if [ $virtual_box -eq 1 ]; then arch-chroot /mnt systemctl enable vboxservice; fi
 
 ### Grub boot loader ###
-arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
+#arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 ### Users ###

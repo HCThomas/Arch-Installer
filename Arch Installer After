@@ -39,4 +39,4 @@ sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
 fi
 
-echo "rm installer, source .bashrc"
+echo "rm install, source .bashrc"

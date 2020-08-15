@@ -7,7 +7,7 @@
 # virtual_box (1-yes,0-no)
 ##
 
-echo -en "1.\tVirtualBox0.\tOther\nEnter Profile: "
+echo -en "1.\tVirtualBox\n0.\tOther\nEnter Profile: "
 read profile
 if [ "$profile" == "" ]; then echo "Profile can't be empty"; exit 1; fi
 
@@ -50,7 +50,7 @@ fi
 timedatectl set-ntp true
 
 ### Setup the disk and partitions ###
-echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n+8G\nt\n19\n  n\n\n\n\n  w\n" | fdisk $device
+echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n+8G\nt\n\n19\n  n\n\n\n\n  w\n" | fdisk $device
 
 part_boot="${device}1"
 part_swap="${device}2"

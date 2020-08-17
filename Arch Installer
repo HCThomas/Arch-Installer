@@ -73,7 +73,7 @@ if [ $virtual_box -eq 1 ]; then pacstrap /mnt virtualbox-guest-utils; fi
 ### Configure the basic system ###
 genfstab -U /mnt >> /etc/fstab
 
-ln -sf /mnt/usr/share/zoneinfo/America/New_York /mnt/etc/localtime
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 arch-chroot /mnt hwclock --systohc
 
 sed -i "176 s/^##*//" /mnt/etc/locale.gen

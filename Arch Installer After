@@ -18,8 +18,9 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S neofetch htop xorg-server
+sudo pacman -S xorg-server xorg-xinit neofetch htop rxvt-unicode urxvt-perls feh ranger w3m xdg-user-dirs
 yay -S google-chrome
+xdg-user-dirs-update
 
 ### Install Vim Plugins ###
 vim -c PlugInstall -c q -c q .vimrc
@@ -27,14 +28,13 @@ vim -c PlugInstall -c q -c q .vimrc
 ### Install Desktop Enviornment ###
 # i3
 if [ $desktop_env -eq 1 ] || [ $desktop_env -eq 3 ]; then
-sudo pacman -S xorg-xinit i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji pulseaudio pamixer brightnessctl network-manager-applet notification-daemon picom rxvt-unicode urxvt-perls dmenu feh ranger w3m
+sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji pulseaudio pamixer brightnessctl network-manager-applet notification-daemon picom  dmenu
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 fi
 
 # KDE
 if [ $desktop_env -eq 2 ] || [ $desktop_env -eq 3 ]; then
-sudo pacman -S plasma konsole yakuake dolphin xdg-user-dirs
-xdg-user-dirs-update
+sudo pacman -S plasma konsole yakuake dolphin
 sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
 fi

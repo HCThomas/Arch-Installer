@@ -27,7 +27,7 @@ vim -c PlugInstall -c q -c q .vimrc
 ### Install Desktop Enviornment ###
 # i3
 if [ $desktop_env -eq 1 ] || [ $desktop_env -eq 3 ]; then
-sudo pacman -S xorg-xinit i3-gaps i3blocks noto-fonts noto-fonts-emoji pulseaudio pamixer network-manager-applet notification-daemon picom rxvt-unicode urxvt-perls dmenu feh ranger w3m
+sudo pacman -S xorg-xinit i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji pulseaudio pamixer brightnessctl network-manager-applet notification-daemon picom rxvt-unicode urxvt-perls dmenu feh ranger w3m
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 fi
 

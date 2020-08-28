@@ -22,8 +22,8 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S xorg-server xorg-xinit neofetch htop rxvt-unicode urxvt-perls termite feh ranger w3m xdg-user-dirs
-yay -S google-chrome
+sudo pacman -S xorg-server xorg-xinit neofetch htop termite feh ranger w3m xdg-user-dirs
+yay -S google-chrome gotop
 xdg-user-dirs-update
 
 ### Install Vim Plugins ###

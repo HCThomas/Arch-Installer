@@ -22,7 +22,7 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S xorg-server xorg-xinit neofetch htop termite xdg-user-dirs
+sudo pacman -S xorg-server xorg-xinit neofetch htop termite xdg-user-dirs dmenu feh ranger w3m
 yay -S google-chrome gotop
 xdg-user-dirs-update
 
@@ -32,7 +32,7 @@ vim -c PlugInstall -c q -c q .vimrc
 ### Install Window Manger and Desktop Enviornment ###
 # i3
 if [ $dm -eq 1 ]; then
-sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils acpi brightnessctl xss-lock network-manager-applet notification-daemon picom  dmenu feh ranger w3m
+sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils acpi brightnessctl xss-lock network-manager-applet notification-daemon picom
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 fi
 

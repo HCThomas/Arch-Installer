@@ -4,7 +4,7 @@ echo -en "1.\ti3\n0.\tNone\nChoose Display Manager: "
 read dm
 if [ "$dm" == "" ]; then echo "Display Manager can't be empty"; exit 1; fi
 
-echo -en "1.\tKDE\n0.\tNone\nChoose Desktop Enviornment: "
+echo -en "1.\tKDE\n2.\tGnome\n0.\tNone\nChoose Desktop Enviornment: "
 read desktop_env
 if [ "$desktop_env" == "" ]; then echo "Desktop Enviornment can't be empty"; exit 1; fi
 
@@ -42,5 +42,12 @@ sudo pacman -S plasma konsole yakuake dolphin
 sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
 fi
+
+# Gnome
+if [ $desktop_env -eq 2 ]; then
+sudo pacman -S gnome gnome-tweaks
+yay -S gnome-terminal-transparency
+sudo systemctl enable sddm
+if
 
 echo "rm install, source .bashrc"

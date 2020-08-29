@@ -47,7 +47,7 @@ fi
 if [ $desktop_env -eq 2 ]; then
 sudo pacman -S gnome gnome-tweaks
 yay -S gnome-terminal-transparency
-sudo systemctl enable sddm
+sudo systemctl enable gdm
 if
 
 echo "rm install, source .bashrc"

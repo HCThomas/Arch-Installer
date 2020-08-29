@@ -29,7 +29,7 @@ xdg-user-dirs-update
 ### Install Vim Plugins ###
 vim -c PlugInstall -c q -c q .vimrc
 
-### Install Desktop Enviornment ###
+### Install Window Manger and Desktop Enviornment ###
 # i3
 if [ $dm -eq 1 ]; then
 sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils acpi brightnessctl xss-lock network-manager-applet notification-daemon picom  dmenu feh ranger w3m

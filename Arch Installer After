@@ -1,12 +1,12 @@
 #!/bin/bash
 
-echo -en "1.\ti3\n2.\tKDE\n3.\ti3+KDE\n0.\tNone\nChoose Desktop Enviornment: "
+echo -en "1.\ti3\n0.\tNone\nChoose Display Manager: "
+read dm
+if [ "$dm" == "" ]; then echo "Display Manager can't be empty"; exit 1; fi
+
+echo -en "1.\tKDE\n0.\tNone\nChoose Desktop Enviornment: "
 read desktop_env
 if [ "$desktop_env" == "" ]; then echo "Desktop Enviornment can't be empty"; exit 1; fi
-
-echo -en "1.\tyes\n0.\tno\nDownload Wallpapers: "
-read wallpapers
-if [ "$wallpapers" == "" ]; then echo "Wallpapers can't be empty"; exit 1; fi
 
 ### AUR Yay ###
 cd ~
@@ -22,7 +22,7 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S xorg-server xorg-xinit neofetch htop termite feh ranger w3m xdg-user-dirs
+sudo pacman -S xorg-server xorg-xinit neofetch htop termite xdg-user-dirs
 yay -S google-chrome gotop
 xdg-user-dirs-update
 
@@ -31,19 +31,16 @@ vim -c PlugInstall -c q -c q .vimrc
 
 ### Install Desktop Enviornment ###
 # i3
-if [ $desktop_env -eq 1 ] || [ $desktop_env -eq 3 ]; then
-sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji ttf-hack ttf-font-awesome pulseaudio pamixer alsa-utils acpi brightnessctl xss-lock network-manager-applet notification-daemon picom  dmenu
+if [ $dm -eq 1 ]; then
+sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils acpi brightnessctl xss-lock network-manager-applet notification-daemon picom  dmenu feh ranger w3m
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 fi
 
 # KDE
-if [ $desktop_env -eq 2 ] || [ $desktop_env -eq 3 ]; then
+if [ $desktop_env -eq 1 ]; then
 sudo pacman -S plasma konsole yakuake dolphin
 sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
 fi
-
-# Wallpapers
-if [ $wallpapers -eq 1 ]; then git clone https://gitlab.com/dwt1/wallpapers.git; fi
 
 echo "rm install, source .bashrc"

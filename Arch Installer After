@@ -23,21 +23,31 @@ git checkout -ft origin/master
 
 ### Install Basic Applications ###
 sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m
-yay -S google-chrome gotop
-cd ~/st && make && sudo make clean install && cd
+yay -S google-chrome gotop libxft-bgra-git
+
+cd ~/.config
+git clone https://github.com/HCThomas/st
+cd ~/.config/st && sudo make clean install && cd
+
 xdg-user-dirs-update
 
 ### Install Vim Plugins ###
 vim -c PlugInstall -c q -c q .vimrc
 
 ### Install Window Manger and Desktop Enviornment ###
-# i3
+# i3, dwm
 if [ $dm -eq 1 ]; then
-sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils acpi brightnessctl playerctl xss-lock network-manager-applet notification-daemon picom
+# Needed packages
+sudo pacman -S noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils brightnessctl playerctl notification-daemon picom
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
+
+# i3
+sudo pacman -S i3-gaps i3blocks i3lock acpi xss-lock network-manager-applet
+
+#dwm
 sudo pacman -S xorg-xsetroot
-yay -S libxft-bgra-git
-cd ~/dwm && make && sudo make clean install && cd
+git clone https://github.com/HCThomas/dwm
+cd ~/.config/dwm && sudo make clean install
 fi
 
 # KDE

@@ -25,10 +25,6 @@ git checkout -ft origin/master
 sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m
 yay -S google-chrome gotop libxft-bgra-git
 
-cd ~/.config
-git clone https://github.com/HCThomas/st
-cd ~/.config/st && sudo make clean install && cd
-
 xdg-user-dirs-update
 
 ### Install Vim Plugins ###
@@ -42,12 +38,9 @@ sudo pacman -S noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer a
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 
 # i3
-sudo pacman -S i3-gaps i3blocks i3lock acpi xss-lock network-manager-applet
+sudo pacman -S i3-gaps i3blocks i3lock acpi xss-lock
 
-#dwm
-sudo pacman -S xorg-xsetroot
-git clone https://github.com/HCThomas/dwm
-cd ~/.config/dwm && sudo make clean install
+#dwm xorg-xsetroot, st libxft-bgra-git
 fi
 
 # KDE
@@ -55,13 +48,6 @@ if [ $desktop_env -eq 1 ]; then
 sudo pacman -S plasma konsole yakuake dolphin
 sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
-fi
-
-# Gnome
-if [ $desktop_env -eq 2 ]; then
-sudo pacman -S gnome gnome-tweaks
-yay -S gnome-terminal-transparency
-sudo systemctl enable gdm
 fi
 
 echo "rm install, source .bashrc"

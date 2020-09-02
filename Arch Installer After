@@ -23,7 +23,7 @@ git checkout -ft origin/master
 
 ### Install Basic Applications ###
 sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m
-yay -S google-chrome gotop libxft-bgra-git
+yay -S google-chrome gotop
 
 xdg-user-dirs-update
 

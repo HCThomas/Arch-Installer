@@ -40,7 +40,7 @@ echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/noti
 # i3
 sudo pacman -S i3-gaps i3blocks acpi
 
-#dwm xorg-xsetroot, st libxft-bgra-git
+#dwm
 sudo pacman -S xorg-xsetroot
 cd .config && git clone https://github.com/HCThomas/dwm && cd dwm && sudo make clean install && cd
 fi

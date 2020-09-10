@@ -13,6 +13,7 @@ cd ~
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
+cd ~
 
 ### Clone dotfiles ###
 cd ~
@@ -24,7 +25,7 @@ git checkout -ft origin/master
 ### Install Basic Applications ###
 sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m
 yay -S google-chrome gotop libxft-bgra-git
-cd .config && git clone https://github.com/HCThomas/st && cd st && sudo make clean install && cd
+cd ~/.config/st && sudo make clean install && cd ~
 xdg-user-dirs-update
 
 ### Install Vim Plugins ###
@@ -42,7 +43,7 @@ sudo pacman -S i3-gaps i3blocks acpi
 
 #dwm
 sudo pacman -S xorg-xsetroot
-cd .config && git clone https://github.com/HCThomas/dwm && cd dwm && sudo make clean install && cd
+cd ~/.config/dwm && sudo make clean install && cd ~
 fi
 
 # KDE

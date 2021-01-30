@@ -4,6 +4,7 @@
 ## Profile Require
 # hostname,user,password(" ")
 # device(/dev/sd*)
+# grub_removable (1-yes,0-no)
 # virtual_box (1-yes,0-no)
 ##
 
@@ -17,6 +18,7 @@ hostname="ArchVB"
 user="holden"
 password="0"
 device="/dev/sda"
+grub_removable=0
 virtual_box=1
 fi
 
@@ -43,6 +45,10 @@ lsblk -p
 echo -en "\nEnter installation disk: "
 read device
 if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
+
+echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "
+read grubRemovable
+if [ "$grub-removable" == "" ]; then echo "Grub Removable can't be empty"; exit 1; fi
 fi
 
 
@@ -87,8 +93,13 @@ arch-chroot /mnt systemctl enable NetworkManager
 if [ $virtual_box -eq 1 ]; then arch-chroot /mnt systemctl enable vboxservice; fi
 
 ### Grub boot loader ###
+if [ $grub-removable -eq 1 ]; then
+arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable
+else
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
-#arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable
+fi
+
+#
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 ### Users ###

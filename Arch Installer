@@ -48,7 +48,7 @@ if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
 
 echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "
 read grub_removable
-if [ "$grub-removable" == "" ]; then echo "Grub Removable can't be empty"; exit 1; fi
+if [ "$grub_removable" == "" ]; then echo "Grub Removable can't be empty"; exit 1; fi
 fi
 
 

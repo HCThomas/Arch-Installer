@@ -28,8 +28,7 @@ yay -S brave gotop libxft-bgra-git
 
 cd ~/.config/st && sudo make clean install && cd ~
 
-sudo pacman -S keepassxc steam
-yay -S freefilesync
+sudo pacman -S keepassxc steam discord
 
 xdg-user-dirs-update
 sudo systemctl enable bluetooth

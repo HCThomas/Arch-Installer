@@ -23,7 +23,7 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m vlc
+sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m vlc code dolphin
 yay -S brave gotop libxft-bgra-git
 cd ~/.config/st && sudo make clean install && cd ~
 xdg-user-dirs-update
@@ -48,7 +48,7 @@ fi
 
 # KDE
 if [ $desktop_env -eq 1 ]; then
-sudo pacman -S plasma konsole yakuake dolphin
+sudo pacman -S plasma konsole yakuake
 sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
 fi

@@ -4,8 +4,10 @@
 ## Profile Require
 # hostname,user,password(" ")
 # device(/dev/sd*)
-# grub_removable (1-yes,0-no)
-# virtual_box (1-yes,0-no)
+# grubRemovable (1-yes,0-no)
+# virtualBox (1-yes,0-no)
+# nvidia (1-yes,0-no)
+# cpu (1-Intel,0-AMD)
 ##
 
 echo -en "1.\tVirtualBox\n0.\tOther\nEnter Profile: "
@@ -18,13 +20,15 @@ hostname="ArchVB"
 user="holden"
 password="0"
 device="/dev/sda"
-grub_removable=0
-virtual_box=1
+grubRemovable=0
+virtualBox=1
+nvidia=0
+cpu=1
 fi
 
 ### Other ###
 if [ $profile -eq 0 ]; then
-virtual_box=0
+virtualBox=0
 
 echo -n "Enter hostname: "
 read hostname
@@ -47,8 +51,16 @@ read device
 if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
 
 echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "
-read grub_removable
-if [ "$grub_removable" == "" ]; then echo "Grub Removable can't be empty"; exit 1; fi
+read grubRemovable
+if [ "$grubRemovable" == "" ]; then echo "Grub Removable can't be empty"; exit 1; fi
+
+echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "
+read nvidia
+if [ "$nvidia" == "" ]; then echo "Nvidia can't be empty"; exit 1; fi
+
+echo -en "1.\tIntel\n0.\tAMD\nIntel or AMD cpu: "
+read cpu
+if [ "$cpu" == "" ]; then echo "CPU can't be empty"; exit 1; fi
 fi
 
 
@@ -73,8 +85,10 @@ mkdir /mnt/boot
 mount $part_boot /mnt/boot
 
 ### Install the basic system ###
-pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub efibootmgr intel-ucode
-if [ $virtual_box -eq 1 ]; then pacstrap /mnt virtualbox-guest-utils; fi
+pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub efibootmgr
+if [ $virtualBox -eq 1 ]; then pacstrap /mnt virtualbox-guest-utils; fi
+if [ $nvidia -eq 1 ]; then pacstrap /mnt nvidia; fi
+if [ $cpu -eq 1 ]; then pacstrap /mnt intel-ucode; else pacstrap /mnt amd-ucode; fi
 
 ### Configure the basic system ###
 genfstab -U /mnt >> /etc/fstab
@@ -90,10 +104,10 @@ echo $hostname >> /mnt/etc/hostname
 echo -e "127.0.0.1\tlocalhost\n::1\t\tlocalhost\n127.0.1.1\t${hostname}.localdomain\t${hostname}" >> /mnt/etc/hosts
 
 arch-chroot /mnt systemctl enable NetworkManager
-if [ $virtual_box -eq 1 ]; then arch-chroot /mnt systemctl enable vboxservice; fi
+if [ $virtualBox -eq 1 ]; then arch-chroot /mnt systemctl enable vboxservice; fi
 
 ### Grub boot loader ###
-if [ $grub_removable -eq 1 ]; then
+if [ $grubRemovable -eq 1 ]; then
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable
 else
 arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB

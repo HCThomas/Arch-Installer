@@ -4,7 +4,7 @@ echo -en "1.\ti3,dwm\n0.\tNone\nChoose Display Manager: "
 read dm
 if [ "$dm" == "" ]; then echo "Display Manager can't be empty"; exit 1; fi
 
-echo -en "1.\tKDE\n2.\tGnome\n0.\tNone\nChoose Desktop Enviornment: "
+echo -en "1.\tKDE\n0.\tNone\nChoose Desktop Enviornment: "
 read desktop_env
 if [ "$desktop_env" == "" ]; then echo "Desktop Enviornment can't be empty"; exit 1; fi
 
@@ -23,7 +23,7 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m
+sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m vlc
 yay -S brave gotop libxft-bgra-git
 cd ~/.config/st && sudo make clean install && cd ~
 xdg-user-dirs-update
@@ -35,7 +35,7 @@ vim -c PlugInstall -c q -c q .vimrc
 # i3, dwm
 if [ $dm -eq 1 ]; then
 # Needed packages
-sudo pacman -S noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils brightnessctl playerctl notification-daemon picom xss-lock i3lock
+sudo pacman -S noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils brightnessctl playerctl notification-daemon picom xss-lock i3lock ntfs-3g
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 
 # i3

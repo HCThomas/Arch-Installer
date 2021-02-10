@@ -23,10 +23,16 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m vlc code dolphin
+sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m vlc code dolphin bluez bluez-utils pulseaudio-alsa pulseaudio p7zip
 yay -S brave gotop libxft-bgra-git
+
 cd ~/.config/st && sudo make clean install && cd ~
+
+sudo pacman -S keepassxc steam
+yay -S freefilesync
+
 xdg-user-dirs-update
+sudo systemctl enable bluetooth
 
 ### Install Vim Plugins ###
 vim -c PlugInstall -c q -c q .vimrc

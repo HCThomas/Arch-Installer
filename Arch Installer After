@@ -29,7 +29,8 @@ yay -S brave gotop libxft-bgra-git
 
 cd ~/.config/st && sudo make clean install && cd ~
 
-sudo pacman -S keepassxc steam discord libreoffice
+sudo pacman -S keepassxc steam discord libreoffice calibre
+yay -S hakuneko-desktop
 
 xdg-user-dirs-update
 sudo systemctl enable bluetooth

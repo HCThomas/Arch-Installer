@@ -23,8 +23,8 @@ git fetch
 git checkout -ft origin/master
 
 ### Install Basic Applications ###
-sudo pacman -S xorg-server xorg-xinit neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m \
-vlc code dolphin bluez bluez-utils pulseaudio-alsa pulseaudio p7zip jdk-openjdk
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m \
+vlc code dolphin bluez bluez-utils pulseaudio-alsa pulseaudio p7zip jdk-openjdk ntfs-3g
 yay -S brave gotop libxft-bgra-git
 
 cd ~/.config/st && sudo make clean install && cd ~
@@ -42,7 +42,7 @@ vim -c PlugInstall -c q -c q .vimrc
 # i3, dwm
 if [ $dm -eq 1 ]; then
 # Needed packages
-sudo pacman -S noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils brightnessctl playerctl notification-daemon picom xss-lock i3lock ntfs-3g
+sudo pacman -S noto-fonts noto-fonts-emoji ttf-font-awesome pulseaudio pamixer alsa-utils brightnessctl playerctl notification-daemon picom xss-lock i3lock 
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 
 # i3

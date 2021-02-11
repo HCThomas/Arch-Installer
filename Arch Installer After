@@ -25,7 +25,7 @@ git checkout -ft origin/master
 ### Install Basic Applications ###
 sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr neofetch htop termite rxvt-unicode urxvt-perls xdg-user-dirs dmenu feh ranger w3m \
 vlc code dolphin bluez bluez-utils pulseaudio-alsa pulseaudio p7zip jdk-openjdk ntfs-3g
-yay -S brave gotop libxft-bgra-git
+yay -S brave-bin gotop libxft-bgra-git
 
 cd ~/.config/st && sudo make clean install && cd ~
 

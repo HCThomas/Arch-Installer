@@ -10,7 +10,7 @@
 # cpu (1-Intel,0-AMD)
 ##
 
-echo -en "1.\tVirtualBox\n0.\tOther\nEnter Profile: "
+echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "
 read profile
 if [ "$profile" == "" ]; then echo "Profile can't be empty"; exit 1; fi
 
@@ -24,6 +24,28 @@ grubRemovable=0
 virtualBox=1
 nvidia=0
 cpu=1
+fi
+
+### Desktop ###
+if [ $profile -eq 2 ]; then
+hostname="HT-ArchDesktop"
+user="holden"
+grubRemovable=1
+virtualBox=0
+nvidia=1
+cpu=1
+
+echo -n "Password: "
+read -s password
+if [ "$password" == "" ]; then echo "Password can't be empty"; exit 1; fi
+echo -en "\nRepeat Password: "
+read -s password2
+if [ "$password" != "$password2" ]; then echo "Passwords did not match"; exit 1; fi
+
+lsblk -p
+echo -en "\nEnter installation disk: "
+read device
+if [ "$device" == "" ]; then echo "Device can't be empty"; exit 1; fi
 fi
 
 ### Other ###

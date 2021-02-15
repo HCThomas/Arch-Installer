@@ -16,14 +16,14 @@ git checkout -ft origin/master
 
 ### Install Window Manger, Desktop Enviornment, Applications ###
 sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs bluez bluez-utils pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g \
-termite ranger w3m vlc code p7zip jdk-openjdk keepassxc steam discord libreoffice calibre
+termite ranger w3m vlc code p7zip jdk-openjdk keepassxc steam discord calibre
 
 yay -S brave-bin gotop libxft-bgra-git hakuneko-desktop nordvpn-bin gkraken
 
 xdg-user-dirs-update
 sudo systemctl enable bluetooth
 sudo systemctl enable nordvpnd
-gpasswd -a holden nordvpn
+sudo gpasswd -a holden nordvpn
 
 # i3
 echo -en "1.\tYes\n0.\tNo\nInstall i3: "

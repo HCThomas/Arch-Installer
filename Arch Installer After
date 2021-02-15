@@ -16,7 +16,7 @@ git checkout -ft origin/master
 
 ### Install Window Manger, Desktop Enviornment, Applications ###
 sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs bluez bluez-utils pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g \
-termite ranger w3m vlc code p7zip jdk-openjdk keepassxc steam discord calibre
+termite ranger w3m vlc code p7zip jdk-openjdk keepassxc steam discord calibre qbittorrent
 
 yay -S brave-bin gotop libxft-bgra-git hakuneko-desktop nordvpn-bin gkraken
 

@@ -7,7 +7,7 @@ bash install
 ```
 ## After Reboot
 ```
-curl -L https://git.io/JJw8r > install
+curl -L https://git.io/JtMq8 > install
 bash install
 rm install
 ```

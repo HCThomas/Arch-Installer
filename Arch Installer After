@@ -14,38 +14,51 @@ git remote add origin https://github.com/HCThomas/dotfiles
 git fetch
 git checkout -ft origin/master
 
-### Install Window Manger, Desktop Enviornment, Applications ###
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs bluez bluez-utils pulseaudio pulseaudio-alsa pulseaudio-bluetooth ntfs-3g \
-termite ranger w3m vlc code p7zip jdk-openjdk keepassxc steam discord calibre qbittorrent
+### Install Vim Plugins ###
+vim -c PlugInstall -c q -c q .vimrc
 
-yay -S brave-bin gotop libxft-bgra-git hakuneko-desktop nordvpn-bin gkraken
+### Install Applications, Window Manger, Desktop Enviornment ###
+# Required apps
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-util pulseaudio-bluetooth bluez bluez-utils ntfs-3g \
+termite ranger w3m vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome
+yay -S brave-bin gotop libxft-bgra-git lf
 
 xdg-user-dirs-update
 sudo systemctl enable bluetooth
+
+# Optional apps
+echo -en "1.\tYes\n0.\tNo\nInstall steam, discord, qbittorrent, calibre, keepassxc, code, hakuneko-desktop, nordvpn-bin, thunderbird, gkraken: "
+read iBasicApps
+if [ $iBasicApps -eq 1 ]; then
+sudo pacman -S steam discord qbittorrent calibre keepassxc code thunderbird
+yay -S hakuneko-desktop nordvpn-bin gkraken
+
 sudo systemctl enable nordvpnd
 sudo gpasswd -a holden nordvpn
+if
 
-# i3
-echo -en "1.\tYes\n0.\tNo\nInstall i3: "
-read iI3
-if [ "$iI3" == "" ]; then echo "Can't be empty!"; exit 1; fi
-if [ $iI3 -eq 1 ]; then
-sudo pacman -S i3-gaps i3blocks i3lock noto-fonts noto-fonts-emoji ttf-font-awesome pamixer alsa-utils brightnessctl playerctl notification-daemon picom xss-lock feh dmenu
+# i3, dwm
+echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "
+read iI3Dwm
+if [ $iI3Dwm -eq 1 ]; then
+sudo pacman -S i3lock xss-lock brightnessctl playerctl notification-daemon picom feh dmenu
 echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
-fi
+
+sudo pacman -S i3-gaps i3blocks
+cd && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clena install && cd
+cd && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clena install && cd
+
 
 # DKE
 echo -en "1.\tYes\n0.\tNo\nInstall KDE: "
 read iKDE
-if [ "$iKDE" == "" ]; then echo "Can't be empty!"; exit 1; fi
-# KDE
 if [ $iKDE -eq 1 ]; then
 sudo pacman -S plasma konsole yakuake dolphin
-sudo systemctl enable sddm
 mkdir -p ~/.local/share/kglobalaccel
-fi
 
-### Install Vim Plugins ###
-vim -c PlugInstall -c q -c q .vimrc
+echo -en "1.\tYes\n0.\tNo\nEnable sddm"
+read eSddm
+if [ $eSddm -eq 1 ]; then sudo systemctl enable sddm; if
+fi
 
 echo "rm install, reboot"

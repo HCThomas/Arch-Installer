@@ -149,3 +149,5 @@ arch-chroot /mnt pacman -Syu
 
 sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/" /mnt/etc/default/grub
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+echo "reboot"

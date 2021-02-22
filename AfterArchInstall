@@ -45,8 +45,9 @@ sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst picom feh dmenu
 
 sudo pacman -S i3-gaps i3blocks
 sudo pacman -S xorg-xsetroot
-cd && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clena install && cd
-cd && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clena install && cd
+cd && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
+cd && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clean install && cd
+cd && git clone https://github.com/HCThomas/dwmblocks && cd dwm && sudo make clean install && cd
 
 
 # DKE

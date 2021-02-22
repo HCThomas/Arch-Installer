@@ -20,8 +20,9 @@ vim -c PlugInstall -c q -c q .vimrc
 ### Install Applications, Window Manger, Desktop Enviornment ###
 # Required apps
 sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-util pulseaudio-bluetooth bluez bluez-utils ntfs-3g \
-termite ranger w3m lxappearance pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome lxappearance pcmanfm-gtk3
-yay -S brave-bin gotop libxft-bgra-git lf
+termite ranger w3m lxappearance pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome ttf-dejavu ttf-joypixel \
+lxappearance pcmanfm-gtk3
+yay -S brave-bin gotop libxft-bgra lf
 
 xdg-user-dirs-update
 sudo systemctl enable bluetooth

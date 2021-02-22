@@ -20,7 +20,7 @@ vim -c PlugInstall -c q -c q .vimrc
 ### Install Applications, Window Manger, Desktop Enviornment ###
 # Required apps
 sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-util pulseaudio-bluetooth bluez bluez-utils ntfs-3g \
-termite ranger w3m vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome
+termite ranger w3m lxappearance pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome lxappearance pcmanfm-gtk3
 yay -S brave-bin gotop libxft-bgra-git lf
 
 xdg-user-dirs-update
@@ -41,8 +41,7 @@ if
 echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "
 read iI3Dwm
 if [ $iI3Dwm -eq 1 ]; then
-sudo pacman -S i3lock xss-lock brightnessctl playerctl notification-daemon picom feh dmenu
-echo -e "[D-BUS Service]\nName=org.freedesktop.Notifications\nExec=/usr/lib/notification-daemon-1.0/notification-daemon" | sudo tee -a /usr/share/dbus-1/services/org.freedesktop.Notifications.service
+sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst picom feh dmenu
 
 sudo pacman -S i3-gaps i3blocks
 sudo pacman -S xorg-xsetroot

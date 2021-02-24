@@ -19,9 +19,8 @@ vim -c PlugInstall -c q -c q .vimrc
 
 ### Install Applications, Window Manger, Desktop Enviornment ###
 # Required apps
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-util pulseaudio-bluetooth bluez bluez-utils ntfs-3g \
-termite ranger w3m lxappearance pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome ttf-dejavu ttf-joypixel \
-lxappearance pcmanfm-gtk3 cups
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g \
+termite ranger w3m lxappearance pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome ttf-dejavu ttf-joypixels cups
 yay -S brave-bin gotop libxft-bgra lf
 
 xdg-user-dirs-update
@@ -36,7 +35,7 @@ yay -S hakuneko-desktop nordvpn-bin gkraken
 
 sudo systemctl enable nordvpnd
 sudo gpasswd -a holden nordvpn
-if
+fi
 
 # i3, dwm
 echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "

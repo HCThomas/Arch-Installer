@@ -44,6 +44,7 @@ if [ $iI3Dwm -eq 1 ]; then
 sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst picom feh xclip
 
 sudo pacman -S i3-gaps i3blocks
+yay -S autotiling
 sudo pacman -S xorg-xsetroot
 mkdir ~/SucklessApps
 cd ~/SucklessApps && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd

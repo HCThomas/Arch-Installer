@@ -48,9 +48,9 @@ sudo pacman -S i3-gaps i3blocks
 yay -S autotiling
 sudo pacman -S xorg-xsetroot
 cd ~/.config && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwm && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dwm && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/st.git && cd st && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwmblocks && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
 
 
 # DKE

@@ -19,8 +19,8 @@ nvim -c PlugInstall -c q -c q
 
 ### Install Applications, Window Manger, Desktop Enviornment ###
 # Required apps
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-utils pulseaudio-bluetooth bluez bluez-utils ncups tfs-3g \
-alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts ttf-font-awesome ttf-joypixels zsh
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils ncups tfs-3g \
+alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts ttf-font-awesome ttf-joypixels zsh
 yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting
 
 chsh -s /usr/bin/zsh
@@ -42,7 +42,7 @@ fi
 echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "
 read iI3Dwm
 if [ $iI3Dwm -eq 1 ]; then
-sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom feh xclip
+sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip
 
 sudo pacman -S i3-gaps i3blocks
 yay -S autotiling

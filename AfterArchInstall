@@ -41,7 +41,7 @@ fi
 echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "
 read iI3Dwm
 if [ $iI3Dwm -eq 1 ]; then
-sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst picom feh xclip
+sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom feh xclip
 
 sudo pacman -S i3-gaps i3blocks
 yay -S autotiling

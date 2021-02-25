@@ -66,4 +66,5 @@ read eSddm
 if [ $eSddm -eq 1 ]; then sudo systemctl enable sddm; if
 fi
 
+rm .bash_history .bash_logout .bash_profile .bashrc
 echo "rm install, reboot"

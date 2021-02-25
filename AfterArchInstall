@@ -14,13 +14,13 @@ git remote add origin https://github.com/HCThomas/dotfiles
 git fetch
 git checkout -ft origin/master
 
-### Install Vim Plugins ###
-vim -c PlugInstall -c q -c q .vimrc
+### Install NVim Plugins ###
+nvim -c PlugInstall -c q -c q
 
 ### Install Applications, Window Manger, Desktop Enviornment ###
 # Required apps
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr arandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g \
-termite alacritty ranger w3m lxappearance pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-emoji ttf-font-awesome ttf-dejavu ttf-joypixels cups
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-utils pulseaudio-bluetooth bluez bluez-utils ncups tfs-3g \
+alacritty lxappearance pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts ttf-font-awesome ttf-joypixels 
 yay -S brave-bin gotop libxft-bgra lf
 
 xdg-user-dirs-update
@@ -45,11 +45,11 @@ sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst picom feh xclip
 
 sudo pacman -S i3-gaps i3blocks
 sudo pacman -S xorg-xsetroot
-mkdir ~/.sucklessApps
-cd ~/.sucklessApps && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
-cd ~/.sucklessApps && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clean install && cd
-cd ~/.sucklessApps && git clone https://github.com/HCThomas/dwmblocks && cd dwm && sudo make clean install && cd
-cd ~/.sucklessApps && git clone https://github.com/HCThomas/dmenu && cd dwm && sudo make clean install && cd
+mkdir ~/SucklessApps
+cd ~/SucklessApps && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
+cd ~/SucklessApps && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clean install && cd
+cd ~/SucklessApps && git clone https://github.com/HCThomas/dwmblocks && cd dwm && sudo make clean install && cd
+cd ~/SucklessApps && git clone https://github.com/HCThomas/dmenu && cd dwm && sudo make clean install && cd
 
 
 # DKE

@@ -107,7 +107,7 @@ mkdir /mnt/boot
 mount $part_boot /mnt/boot
 
 ### Install the basic system ###
-pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager gvim git grub efibootmgr
+pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
 if [ $virtualBox -eq 1 ]; then pacstrap /mnt virtualbox-guest-utils; fi
 if [ $nvidia -eq 1 ]; then pacstrap /mnt nvidia nvidia-settings; fi
 if [ $cpu -eq 1 ]; then pacstrap /mnt intel-ucode; else pacstrap /mnt amd-ucode; fi

@@ -23,8 +23,7 @@ iwctl
 ```
 ### Network Manager
 ```
-nmcli d wifi list
-nmcli d wifi connect SSID password password
+nmtui
 ```
 
 ## DualBoot Clock Change
@@ -42,13 +41,10 @@ localhost:631/admin
 
 ## Mounting drives
 ```
-chown holden /run/media/{username}
-
 blkid
 sudo vim /etc/fstab
 UUID="" /run/media/{username}/{drivename} ntfs{type} defaults 0 0
 
 lsblk
 sudo mount /dev/sd?? /run/media/{username}/{drivename}
-sudo mount ntfs-3g /dev/sd?? /run/media/{username}/{drivename}
 ```

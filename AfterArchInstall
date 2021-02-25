@@ -21,7 +21,7 @@ nvim -c PlugInstall -c q -c q
 # Required apps
 sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer alsa-utils pulseaudio-bluetooth bluez bluez-utils ncups tfs-3g \
 alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs vlc p7zip jdk-openjdk htop neofetch openssh noto-fonts ttf-font-awesome ttf-joypixels zsh
-yay -S brave-bin gotop libxft-bgra lf
+yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting
 
 chsh -s /usr/bin/zsh
 xdg-user-dirs-update

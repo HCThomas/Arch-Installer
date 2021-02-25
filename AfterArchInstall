@@ -47,11 +47,10 @@ sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom feh
 sudo pacman -S i3-gaps i3blocks
 yay -S autotiling
 sudo pacman -S xorg-xsetroot
-mkdir ~/SucklessApps
-cd ~/SucklessApps && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
-cd ~/SucklessApps && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clean install && cd
-cd ~/SucklessApps && git clone https://github.com/HCThomas/dwmblocks && cd dwm && sudo make clean install && cd
-cd ~/SucklessApps && git clone https://github.com/HCThomas/dmenu && cd dwm && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/st.git && cd dwm && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwm && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dwm && sudo make clean install && cd
 
 
 # DKE

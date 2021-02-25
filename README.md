@@ -27,6 +27,11 @@ nmcli d wifi list
 nmcli d wifi connect SSID password password
 ```
 
+## DualBoot Clock Change
+```
+sudo timedatectl set-local-rtc true --adjust-system-clock
+```
+
 ## Bluetooth
 ```
 bluetoothctl

@@ -28,12 +28,12 @@ xdg-user-dirs-update
 sudo systemctl enable bluetooth
 
 # Optional apps
-echo -en "1.\tYes\n0.\tNo\nInstall steam, discord, qbittorrent, calibre, keepassxc, code, hakuneko-desktop, nordvpn-bin, thunderbird, gkraken, virtualbox: "
+echo -en "1.\tYes\n0.\tNo\nInstall steam, discord, qbittorrent, calibre, keepassxc, code, hakuneko-desktop, nordvpn-bin, thunderbird, liquidctl, virtualbox: "
 read iBasicApps
 if [ $iBasicApps -eq 1 ]; then
 echo "For virutal box select 2"
-sudo pacman -S steam discord qbittorrent calibre keepassxc code thunderbird virtualbox
-yay -S hakuneko-desktop nordvpn-bin gkraken
+sudo pacman -S steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
+yay -S hakuneko-desktop nordvpn-bin
 
 sudo systemctl enable nordvpnd
 sudo gpasswd -a holden nordvpn

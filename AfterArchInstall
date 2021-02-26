@@ -20,7 +20,7 @@ nvim -c PlugInstall -c q -c q
 ### Install Applications, Window Manger, Desktop Enviornment ###
 # Required apps
 sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ntfs-3g \
-alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts ttf-font-awesome ttf-joypixels zsh
+alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts ttf-font-awesome ttf-joypixels zsh bmon
 yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting
 
 chsh -s /usr/bin/zsh
@@ -52,7 +52,7 @@ cd ~/.config && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo 
 cd ~/.config && git clone https://github.com/HCThomas/st.git && cd st && sudo make clean install && cd
 cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwmblocks && sudo make clean install && cd
 cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
-
+fi
 
 # DKE
 echo -en "1.\tYes\n0.\tNo\nInstall KDE: "
@@ -63,7 +63,7 @@ mkdir -p ~/.local/share/kglobalaccel
 
 echo -en "1.\tYes\n0.\tNo\nEnable sddm"
 read eSddm
-if [ $eSddm -eq 1 ]; then sudo systemctl enable sddm; if
+if [ $eSddm -eq 1 ]; then sudo systemctl enable sddm; fi
 fi
 
 rm .bash_history .bash_logout .bash_profile .bashrc

@@ -19,9 +19,9 @@ nvim -c PlugInstall -c q -c q
 
 ### Install Applications, Window Manger, Desktop Enviornment ###
 # Required apps
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ntfs-3g \
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g \
 alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts ttf-font-awesome ttf-joypixels zsh bmon rsync
-yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting
+yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting epson-inkjet-printer-escpr
 
 chsh -s /usr/bin/zsh
 xdg-user-dirs-update

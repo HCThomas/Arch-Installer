@@ -37,7 +37,9 @@ bluetoothctl
 ```
 
 ## Cups printers
+```
 localhost:631/admin
+```
 
 ## Mounting drives
 ```

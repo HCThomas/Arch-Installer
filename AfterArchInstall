@@ -26,6 +26,7 @@ yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting
 chsh -s /usr/bin/zsh
 xdg-user-dirs-update
 sudo systemctl enable bluetooth
+sudo systemctl enable cups
 
 # Optional apps
 echo -en "1.\tYes\n0.\tNo\nInstall steam, discord, qbittorrent, calibre, keepassxc, code, hakuneko-desktop, nordvpn-bin, thunderbird, liquidctl, virtualbox: "

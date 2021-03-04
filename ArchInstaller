@@ -67,6 +67,9 @@ arch-chroot /mnt pacman -Syu
 sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/" /mnt/etc/default/grub
 arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg}
 
+cpInstallScript() {cp install /mnt/home/"$user"; chown "$name":"$name" /mnt/home/"$name"/install}
+startScript() {touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile; chown "$name":"$name" /mnt/home/"$name"/.bash_profile}
+
 echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "; read profile
 case $probile in
 1) 
@@ -106,6 +109,8 @@ systemConfig
 bootLoader
 addUser
 extraConfig
+cpInstallScript
+startScript
 rebootNow}
 
 afterReboot() {

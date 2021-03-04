@@ -3,7 +3,6 @@
 getBAReboot() {echo -en "1.\tBefore\n0.\tAfter\nBefore or After Reboot: "; read baReboot}
 rebootNow() {echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow -eq 1 ] && reboot}
 
-beforeReboot() {
 getHostName() {echo -n "Enter hostname: "; read hostname} #hostname
 getUserName() {echo -n "Enter username: "; read user} #user
 getGrubRemovable() {echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable} #grubRemovable (1-y,0-n)
@@ -70,6 +69,48 @@ arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg}
 cpInstallScript() {cp install /mnt/home/"$user"; chown "$name":"$name" /mnt/home/"$name"/install}
 startScript() {touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile; chown "$name":"$name" /mnt/home/"$name"/.bash_profile}
 
+getInstallOptionalApps() {echo -en "1.\tYes\n0.\tNo\nInstall steam, discord, qbittorrent, calibre, keepassxc, code, hakuneko-desktop, nordvpn-bin, thunderbird, liquidctl, virtualbox: "; read iBasicApps}
+getInstallKDE() {echo -en "1.\tYes\n0.\tNo\nInstall KDE: "; read iKDE}
+getInstallI3Dwm() {echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "; read iI3Dwm}
+installAur() {cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd}
+cloneDotfiles() {cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master}
+vimPlugins() {nvim -c PlugInstall -c q -c q}
+rmExtraFiles() {rm .bash_history .bash_logout .bash_profile .bashrc}
+
+installApps() {
+sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g \
+alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels zsh bmon rsync \
+mpd mpc ncmpcpp
+yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting epson-inkjet-printer-escpr
+chsh -s /usr/bin/zsh
+xdg-user-dirs-update
+sudo systemctl enable bluetooth
+sudo systemctl enable cups}
+
+installOptionApps() {
+echo "For virutal box select 2"
+sudo pacman -S steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
+yay -S hakuneko-desktop nordvpn-bin
+sudo systemctl enable nordvpnd
+sudo gpasswd -a holden nordvpn}
+
+installi3Dwm() {
+sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip
+sudo pacman -S i3-gaps i3blocks
+yay -S autotiling
+sudo pacman -S xorg-xsetroot
+cd ~/.config && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/st.git && cd st && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwmblocks && sudo make clean install && cd
+cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd}
+
+installDde() {
+sudo pacman -S plasma konsole yakuake dolphin
+mkdir -p ~/.local/share/kglobalaccel
+echo -en "1.\tYes\n0.\tNo\nEnable sddm"; read eSddm
+[ $eSddm -eq 1 ] && sudo systemctl enable sddm}
+
+beforeReboot() {
 echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "; read profile
 case $probile in
 1) 
@@ -114,47 +155,6 @@ startScript
 rebootNow}
 
 afterReboot() {
-getInstallOptionalApps() {echo -en "1.\tYes\n0.\tNo\nInstall steam, discord, qbittorrent, calibre, keepassxc, code, hakuneko-desktop, nordvpn-bin, thunderbird, liquidctl, virtualbox: "; read iBasicApps}
-getInstallKDE)() {echo -en "1.\tYes\n0.\tNo\nInstall KDE: "; read iKDE}
-getInstallI3Dwm() {echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "; read iI3Dwm}
-installAur() {cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd}
-cloneDotfiles() {cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master}
-vimPlugins() {nvim -c PlugInstall -c q -c q}
-rmExtraFiles() {rm .bash_history .bash_logout .bash_profile .bashrc}
-
-installApps() {
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g \
-alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels zsh bmon rsync \
-mpd mpc ncmpcpp
-yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting epson-inkjet-printer-escpr
-chsh -s /usr/bin/zsh
-xdg-user-dirs-update
-sudo systemctl enable bluetooth
-sudo systemctl enable cups}
-
-installOptionApps() {
-echo "For virutal box select 2"
-sudo pacman -S steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
-yay -S hakuneko-desktop nordvpn-bin
-sudo systemctl enable nordvpnd
-sudo gpasswd -a holden nordvpn}
-
-installi3Dwm() {
-sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip
-sudo pacman -S i3-gaps i3blocks
-yay -S autotiling
-sudo pacman -S xorg-xsetroot
-cd ~/.config && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/st.git && cd st && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwmblocks && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd}
-
-installDde() {
-sudo pacman -S plasma konsole yakuake dolphin
-mkdir -p ~/.local/share/kglobalaccel
-echo -en "1.\tYes\n0.\tNo\nEnable sddm"; read eSddm
-[ $eSddm -eq 1 ] && sudo systemctl enable sddm}
-
 installAur
 cloneDotfiles
 vimPlugins

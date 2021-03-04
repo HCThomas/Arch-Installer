@@ -157,7 +157,8 @@ installApps
 [ $iBasicApps -eq 1 ]installOptionApps
 [ $iI3Dwm -eq 1 ] && installi3Dwm
 [ $iKDE -eq 1 ] && installKde
-rmExtraFiles}
+rmExtraFiles
+rebootNow}
 
 getBAReboot
 [ $baReboot -eq 1] && beforeReboot || afterReboot

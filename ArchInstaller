@@ -1,10 +1,18 @@
 #!/bin/bash
 
-getBAReboot() {echo -en "1.\tBefore\n0.\tAfter\nBefore or After Reboot: "; read baReboot}
-rebootNow() {echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow -eq 1 ] && reboot}
+getBAReboot() {
+		echo -en "1.\tBefore\n0.\tAfter\nBefore or After Reboot: "; read baReboot
+}
+rebootNow() {
+		echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow -eq 1 ] && reboot
+}
 
-getHostName() {echo -n "Enter hostname: "; read hostname}
-getUserName() {echo -n "Enter username: "; read user}
+getHostName() {
+		echo -n "Enter hostname: "; read hostname
+}
+getUserName() {
+		echo -n "Enter username: "; read user
+}
 getGrubRemovable() {echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable}
 getVirtualBox() {echo -en "1.\tYes\n0.\tNo\nVirtualBox: "; read virtualBox}
 getNvidia() {echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "; read nvidia}

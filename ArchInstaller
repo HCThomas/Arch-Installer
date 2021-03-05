@@ -3,167 +3,175 @@
 getBAReboot() {echo -en "1.\tBefore\n0.\tAfter\nBefore or After Reboot: "; read baReboot}
 rebootNow() {echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow -eq 1 ] && reboot}
 
-getHostName() {echo -n "Enter hostname: "; read hostname} #hostname
-getUserName() {echo -n "Enter username: "; read user} #user
-getGrubRemovable() {echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable} #grubRemovable (1-y,0-n)
-getVirtualBox() {echo -en "1.\tYes\n0.\tNo\nVirtualBox: "; read virtualBox} #virtualBox (1-y,0-n)
-getNvidia() {echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "; read nvidia} #nvidia (1-y,0-n)
-getCpu() {echo -en "1.\tIntel\n0.\tAMD\nIntel or AMD cpu: "; read cpu} #cpu (1-intel,0-amd)
+getHostName() {echo -n "Enter hostname: "; read hostname}
+getUserName() {echo -n "Enter username: "; read user}
+getGrubRemovable() {echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable}
+getVirtualBox() {echo -en "1.\tYes\n0.\tNo\nVirtualBox: "; read virtualBox}
+getNvidia() {echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "; read nvidia}
+getCpu() {echo -en "1.\tIntel\n0.\tAMD\nIntel or AMD cpu: "; read cpu}
 getPassword() {
-echo -n "Password: "; read -s password
-echo -en "\nRepeat Password: "; read -s password2
-[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1} #password
+		echo -n "Password: "; read -s password
+		echo -en "\nRepeat Password: "; read -s password2
+		[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1
+}
 getDevice() {
-lsblk -p; echo -en "\nEnter installation disk(/dev/sd*): "; read device
-[ -z "$device" ] && echo "Device can't be empty" && exit 1} #device (/dev/sd*)
+		lsblk -p; echo -en "\nEnter installation disk(/dev/sd*): "; read device
+		[ -z "$device" ] && echo "Device can't be empty" && exit 1
+}
 
 diskSetup() {
-echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n+2G\nt\n\n19\n  n\n\n\n\n  w\n" | fdisk $device
-partBoot="${device}1"
-partSwap="${device}2"
-partLinux="${device}3"
-mkfs.fat -F 32 $partBoot
-mkfs.ext4 $partLinux
-mkswap $partSwap
-swapon $partSwap
-mount $partLinux /mnt
-mkdir /mnt/boot
-mount $partBoot /mnt/boot}
+		echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n+2G\nt\n\n19\n  n\n\n\n\n  w\n" | fdisk $device
+		partBoot="${device}1"
+		partSwap="${device}2"
+		partLinux="${device}3"
+		mkfs.fat -F 32 $partBoot
+		mkfs.ext4 $partLinux
+		mkswap $partSwap
+		swapon $partSwap
+		mount $partLinux /mnt
+		mkdir /mnt/boot
+		mount $partBoot /mnt/boot
+}
 
 addUser() {
-arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
-sed -i "82 s/^##*//" /mnt/etc/sudoers
-echo -e "${password}\n${password}" | arch-chroot /mnt passwd
-echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user}
+		arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
+		sed -i "82 s/^##*//" /mnt/etc/sudoers
+		echo -e "${password}\n${password}" | arch-chroot /mnt passwd
+		echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
+}
 
 systemInstall() {
-pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
-[ $nvidia -eq 1 ] && pacstrap /mnt nvidia nvidia-settings
-[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode}
+		pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
+		[ $nvidia -eq 1 ] && pacstrap /mnt nvidia nvidia-settings
+		[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
+}
 
 systemConfig() {
-genfstab -U /mnt >> /etc/fstab
-arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
-arch-chroot /mnt hwclock --systohc
-sed -i "177 s/^##*//" /mnt/etc/locale.gen
-arch-chroot /mnt locale-gen
-echo LANG=en_US.UTF-8 >> /mnt/etc/locale.conf
-echo $hostname >> /mnt/etc/hostname
-echo -e "127.0.0.1\tlocalhost\n::1\t\tlocalhost\n127.0.1.1\t${hostname}.localdomain\t${hostname}" >> /mnt/etc/hosts
-arch-chroot /mnt systemctl enable NetworkManager}
+		genfstab -U /mnt >> /etc/fstab
+		arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+		arch-chroot /mnt hwclock --systohc
+		sed -i "177 s/^##*//" /mnt/etc/locale.gen
+		arch-chroot /mnt locale-gen
+		echo LANG=en_US.UTF-8 >> /mnt/etc/locale.conf
+		echo $hostname >> /mnt/etc/hostname
+		echo -e "127.0.0.1\tlocalhost\n::1\t\tlocalhost\n127.0.1.1\t${hostname}.localdomain\t${hostname}" >> /mnt/etc/hosts
+		arch-chroot /mnt systemctl enable NetworkManager
+}
 
 bootLoader() {
-[ $grubRemovable -eq 1 ] && arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable || arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg}
+		[ $grubRemovable -eq 1 ] && arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable || arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
+		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+}
 
-installVirtualbox() {
-pacstrap /mnt virtualbox-guest-utils
-arch-chroot /mnt systemctl enable vboxservice}
+installVirtualbox() {[ $virtualBox -eq 1 ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice}
 
 extraConfig() {
-sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
-arch-chroot /mnt pacman -Syu
-sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/" /mnt/etc/default/grub
-arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg}
+		sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
+		arch-chroot /mnt pacman -Syu
+		sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=0/" /mnt/etc/default/grub
+		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+}
 
 cpInstallScript() {cp install /mnt/home/"$user"; chown "$name":"$name" /mnt/home/"$name"/install}
-startScript() {touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile; chown "$name":"$name" /mnt/home/"$name"/.bash_profile}
+startScript() {touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile; chown "$name":"$name" /mnt/home/"$name"/.bash_profile
+}
 
-getInstallOptionalApps() {echo -en "1.\tYes\n0.\tNo\nInstall steam, discord, qbittorrent, calibre, keepassxc, code, hakuneko-desktop, nordvpn-bin, thunderbird, liquidctl, virtualbox: "; read iBasicApps}
-getInstallKDE() {echo -en "1.\tYes\n0.\tNo\nInstall KDE: "; read iKDE}
-getInstallI3Dwm() {echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "; read iI3Dwm}
 installAur() {cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd}
 cloneDotfiles() {cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master}
 vimPlugins() {nvim -c PlugInstall -c q -c q}
 rmExtraFiles() {rm .bash_history .bash_logout .bash_profile .bashrc}
 
 installApps() {
-sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g \
-alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels zsh bmon rsync \
-mpd mpc ncmpcpp
-yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting epson-inkjet-printer-escpr
-chsh -s /usr/bin/zsh
-xdg-user-dirs-update
-sudo systemctl enable bluetooth
-sudo systemctl enable cups}
+		sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels zsh bmon rsync mpd mpc ncmpcpp steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
+		yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin
 
-installOptionApps() {
-echo "For virutal box select 2"
-sudo pacman -S steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
-yay -S hakuneko-desktop nordvpn-bin
-sudo systemctl enable nordvpnd
-sudo gpasswd -a holden nordvpn}
+		chsh -s /usr/bin/zsh
+		xdg-user-dirs-update
+		sudo systemctl enable bluetooth
+		sudo systemctl enable cups
+		sudo systemctl enable nordvpnd
+		sudo gpasswd -a holden nordvpn
+}
+
 
 installi3Dwm() {
-sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip
-sudo pacman -S i3-gaps i3blocks
-yay -S autotiling
-sudo pacman -S xorg-xsetroot
-cd ~/.config && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/st.git && cd st && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwmblocks && sudo make clean install && cd
-cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd}
+		echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "; read iI3Dwm
+		if [ $iI3Dwm -eq 1 ]; then
+				sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip
+				sudo pacman -S i3-gaps i3blocks
+				yay -S autotiling
+				sudo pacman -S xorg-xsetroot
+				cd ~/.config && git clone https://github.com/HCThomas/dwm.git && cd dwm && sudo make clean install && cd
+				cd ~/.config && git clone https://github.com/HCThomas/st.git && cd st && sudo make clean install && cd
+				cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwmblocks && sudo make clean install && cd
+				cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
+		fi
+}
 
-installDde() {
-sudo pacman -S plasma konsole yakuake dolphin
-mkdir -p ~/.local/share/kglobalaccel
-echo -en "1.\tYes\n0.\tNo\nEnable sddm"; read eSddm
-[ $eSddm -eq 1 ] && sudo systemctl enable sddm}
+installKde() {
+		echo -en "1.\tYes\n0.\tNo\nInstall KDE: "; read iKDE
+		if [ $iKDE -eq 1 ]; then
+				sudo pacman -S plasma konsole yakuake dolphin
+				mkdir -p ~/.local/share/kglobalaccel
+				echo -en "1.\tYes\n0.\tNo\nEnable sddm"; read eSddm
+				[ $eSddm -eq 1 ] && sudo systemctl enable sddm
+		fi
+}
 
 beforeReboot() {
-echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "; read profile
-case $probile in
-1) 
-hostname="ArchVB"
-user="holden"
-password="0"
-device="/dev/sda"
-grubRemovable=0
-virtualBox=1
-nvidia=0
-cpu=1 ;;
-2)
-hostname="HT-ArchDesktop"
-user="holden"
-grubRemovable=1
-virtualBox=0
-nvidia=1
-cpu=1
-getPassword
-getDevice ;;
-0)
-getHostName
-getUserName
-getPassword
-getDevice
-getGrubRemovable
-getVirtualbox
-getNvidia
-getCpu ;;
-esac
+		echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "; read profile
+		case $probile in
+				1) 
+						hostname="ArchVB"
+						user="holden"
+						password="0"
+						device="/dev/sda"
+						grubRemovable=0
+						virtualBox=1
+						nvidia=0
+						cpu=1 ;;
+				2)
+						hostname="HT-ArchDesktop"
+						user="holden"
+						grubRemovable=1
+						virtualBox=0
+						nvidia=1
+						cpu=1
+						getPassword
+						getDevice ;;
+				0)
+						getHostName
+						getUserName
+						getPassword
+						getDevice
+						getGrubRemovable
+						getVirtualbox
+						getNvidia
+						getCpu ;;
+		esac
 
-timedatectl set-ntp true
-diskSetup
-systemInstall
-systemConfig
-[ $virtualBox -eq 1 ] && installVirtualbox
-bootLoader
-addUser
-extraConfig
-cpInstallScript
-startScript
-rebootNow}
-
+		timedatectl set-ntp true
+		diskSetup
+		systemInstall
+		systemConfig
+		installVirtualbox
+		bootLoader
+		addUser
+		extraConfig
+		cpInstallScript
+		startScript
+		rebootNow
+}
 afterReboot() {
-installAur
-cloneDotfiles
-vimPlugins
-installApps
-[ $iBasicApps -eq 1 ]installOptionApps
-[ $iI3Dwm -eq 1 ] && installi3Dwm
-[ $iKDE -eq 1 ] && installKde
-rmExtraFiles
-rebootNow}
+		installAur
+		cloneDotfiles
+		vimPlugins
+		installApps
+		installi3Dwm
+		installKde
+		rmExtraFiles
+		rebootNow
+}
 
 getBAReboot
 [ $baReboot -eq 1] && beforeReboot || afterReboot

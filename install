@@ -79,7 +79,11 @@ restartScript() {
 startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile;}
 
 installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
-cloneDotfiles() { cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master;}
+cloneDotfiles() { 
+		cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master
+		echo -en "Which dofiles\n1.\tDekstop\n2.\tLaptop"; read lddote
+		[ $lddote -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
+}
 vimPlugins() { nvim -c PlugInstall -c q -c q;}
 rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
 
@@ -118,6 +122,11 @@ installKde() {
 				echo -n "Enable sddm(y,n): "; read eSddm
 				[ $eSddm = y ] && sudo systemctl enable sddm
 		fi
+}
+
+fixTime() {
+		echo -n "Are you duelbooting windows(y,n)"; read duelb
+		[ $duelb = y ] && sudo timedatectl set-local-rtc true --adjust-system-clock
 }
 
 beforeReboot() {
@@ -164,6 +173,7 @@ beforeReboot() {
 		rebootNow
 }
 afterReboot() {
+		fixTime
 		installAur
 		cloneDotfiles
 		vimPlugins

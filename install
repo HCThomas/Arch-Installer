@@ -70,7 +70,12 @@ extraConfig() {
 		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-cpInstallScript() { cp install /mnt/home/"$user";}
+restartScript() {
+		cp install /mnt/home/"$user"
+		touch /mnt/home/"$user"/.bash_profile
+		echo "exec bash install" >> /mnt/home/"$user"/.bash_profile
+}
+
 startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile;}
 
 installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
@@ -79,7 +84,7 @@ vimPlugins() { nvim -c PlugInstall -c q -c q;}
 rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
 
 installApps() {
-		sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels zsh bmon rsync mpd mpc ncmpcpp steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
+		sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels zsh bmon rsync mpd mpc ncmpcpp steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
 		yay -S brave-bin gotop libxft-bgra lf zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin
 
 		chsh -s /usr/bin/zsh
@@ -87,7 +92,7 @@ installApps() {
 		sudo systemctl enable bluetooth
 		sudo systemctl enable cups
 		sudo systemctl enable nordvpnd
-		sudo gpasswd -a holden nordvpn
+		sudo gpasswd -a $(whoami) nordvpn
 }
 
 
@@ -155,8 +160,7 @@ beforeReboot() {
 		bootLoader
 		addUser
 		extraConfig
-		cpInstallScript
-		startScript
+		restartScript
 		rebootNow
 }
 afterReboot() {

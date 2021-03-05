@@ -14,10 +14,8 @@ getPassword() {
 		echo -en "\nRepeat Password: "; read -s password2
 		[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1
 }
-
 getDevice() {
 		lsblk -p; echo -en "\nEnter installation disk(/dev/sd*): "; read device
-		[ -z "$device" ] && echo "Device can't be empty" && exit 1
 }
 
 diskSetup() {
@@ -120,7 +118,7 @@ installKde() {
 
 beforeReboot() {
 		echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "; read profile
-		case $probile in
+		case $profile in
 				1) 
 						hostname="ArchVB"
 						user="holden"

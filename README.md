@@ -2,7 +2,7 @@
 
 ## Start Installer
 ```
-curl -L https://git.io/JtMqP > install && bash install
+curl -L https://git.io/JqJHf > install && bash install
 ```
 
 ## Wifi

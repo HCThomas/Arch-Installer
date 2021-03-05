@@ -5,7 +5,7 @@ rebootNow() { echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow
 
 getHostName() { echo -n "Enter hostname: "; read hostname }
 getUserName() { echo -n "Enter username: "; read user }
-getGrubRemovable() {echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable }
+getGrubRemovable() { echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable }
 getVirtualBox() { echo -en "1.\tYes\n0.\tNo\nVirtualBox: "; read virtualBox }
 getNvidia() { echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "; read nvidia }
 getCpu() { echo -en "1.\tIntel\n0.\tAMD\nIntel or AMD cpu: "; read cpu }

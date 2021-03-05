@@ -1,14 +1,14 @@
 #!/bin/bash
 
-getBAReboot() { echo -en "1.\tBefore\n0.\tAfter\nBefore or After Reboot: "; read baReboot }
-rebootNow() { echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow -eq 1 ] && reboot }
+getBAReboot() { echo -en "1.\tBefore\n0.\tAfter\nBefore or After Reboot: "; read baReboot;}
+rebootNow() { echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow -eq 1 ] && reboot;}
 
-getHostName() { echo -n "Enter hostname: "; read hostname }
-getUserName() { echo -n "Enter username: "; read user }
-getGrubRemovable() { echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable }
-getVirtualBox() { echo -en "1.\tYes\n0.\tNo\nVirtualBox: "; read virtualBox }
-getNvidia() { echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "; read nvidia }
-getCpu() { echo -en "1.\tIntel\n0.\tAMD\nIntel or AMD cpu: "; read cpu }
+getHostName() { echo -n "Enter hostname: "; read hostname;}
+getUserName() { echo -n "Enter username: "; read user;}
+getGrubRemovable() { echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable;}
+getVirtualBox() { echo -en "1.\tYes\n0.\tNo\nVirtualBox: "; read virtualBox;}
+getNvidia() { echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "; read nvidia;}
+getCpu() { echo -en "1.\tIntel\n0.\tAMD\nIntel or AMD cpu: "; read cpu;}
 getPassword() {
 		echo -n "Password: "; read -s password
 		echo -en "\nRepeat Password: "; read -s password2
@@ -64,7 +64,7 @@ bootLoader() {
 		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-installVirtualbox() { [ $virtualBox -eq 1 ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice }
+installVirtualbox() { [ $virtualBox -eq 1 ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice;}
 
 extraConfig() {
 		sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
@@ -73,13 +73,13 @@ extraConfig() {
 		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-cpInstallScript() { cp install /mnt/home/"$user"; chown "$name":"$name" /mnt/home/"$name"/install }
-startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile; chown "$name":"$name" /mnt/home/"$name"/.bash_profile }
+cpInstallScript() { cp install /mnt/home/"$user"; chown "$name":"$name" /mnt/home/"$name"/install;}
+startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile; chown "$name":"$name" /mnt/home/"$name"/.bash_profile;}
 
-installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd }
-cloneDotfiles() { cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master }
-vimPlugins() { nvim -c PlugInstall -c q -c q }
-rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc }
+installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
+cloneDotfiles() { cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master;}
+vimPlugins() { nvim -c PlugInstall -c q -c q;}
+rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
 
 installApps() {
 		sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g alacritty lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs mpv vlc sxiv p7zip jdk-openjdk htop neofetch openssh noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels zsh bmon rsync mpd mpc ncmpcpp steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
@@ -174,4 +174,4 @@ afterReboot() {
 }
 
 getBAReboot
-[ $baReboot -eq 1] && beforeReboot || afterReboot
+[ $baReboot -eq 1 ] && beforeReboot || afterReboot

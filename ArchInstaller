@@ -71,8 +71,8 @@ extraConfig() {
 		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-cpInstallScript() { cp install /mnt/home/"$user"; chown "$name":"$name" /mnt/home/"$name"/install;}
-startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile; chown "$name":"$name" /mnt/home/"$name"/.bash_profile;}
+cpInstallScript() { cp install /mnt/home/"$user";}
+startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile;}
 
 installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
 cloneDotfiles() { cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master;}

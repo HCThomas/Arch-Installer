@@ -1,14 +1,13 @@
 #!/bin/bash
 
-getBAReboot() { echo -en "1.\tBefore\n0.\tAfter\nBefore or After Reboot: "; read baReboot;}
-rebootNow() { echo -en "1.\tYes\n0.\tNo\nReboot: "; read rebootNow; [ $rebootNow -eq 1 ] && reboot;}
+rebootNow() { echo -n "Reboot(y,n): "; read rebootNow; [ $rebootNow = y ] && reboot;}
 
 getHostName() { echo -n "Enter hostname: "; read hostname;}
 getUserName() { echo -n "Enter username: "; read user;}
-getGrubRemovable() { echo -en "1.\tYes\n0.\tNo\nGrub removable installation: "; read grubRemovable;}
-getVirtualBox() { echo -en "1.\tYes\n0.\tNo\nVirtualBox: "; read virtualBox;}
-getNvidia() { echo -en "1.\tYes\n0.\tNo\nInstall Nvidia Drivers: "; read nvidia;}
-getCpu() { echo -en "1.\tIntel\n0.\tAMD\nIntel or AMD cpu: "; read cpu;}
+getGrubRemovable() { echo -n "Grub removable installation(y,n): "; read grubRemovable;}
+getVirtualBox() { echo -n "VirtualBox(y,n): "; read virtualBox;}
+getNvidia() { echo -n "Install Nvidia Drivers(y,n): "; read nvidia;}
+getCpu() { echo -en "Intel or AMD cpu:\ni.\tIntel\na.\tAMD\n: "; read cpu;}
 getPassword() {
 		echo -n "Password: "; read -s password
 		echo -en "\nRepeat Password: "; read -s password2
@@ -41,8 +40,8 @@ addUser() {
 
 systemInstall() {
 		pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
-		[ $nvidia -eq 1 ] && pacstrap /mnt nvidia nvidia-settings
-		[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
+		[ $nvidia = y ] && pacstrap /mnt nvidia nvidia-settings
+		[ $cpu = i ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
 }
 
 systemConfig() {
@@ -58,11 +57,11 @@ systemConfig() {
 }
 
 bootLoader() {
-		[ $grubRemovable -eq 1 ] && arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable || arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
+		[ $grubRemovable = y ] && arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable || arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
 		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 }
 
-installVirtualbox() { [ $virtualBox -eq 1 ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice;}
+installVirtualbox() { [ $virtualBox = y ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice;}
 
 extraConfig() {
 		sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
@@ -93,8 +92,8 @@ installApps() {
 
 
 installi3Dwm() {
-		echo -en "1.\tYes\n0.\tNo\nInstall i3, dwm: "; read iI3Dwm
-		if [ $iI3Dwm -eq 1 ]; then
+		echo -en "Install i3, dwm(y,n): "; read iI3Dwm
+		if [ $iI3Dwm = y ]; then
 				sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip
 				sudo pacman -S i3-gaps i3blocks
 				yay -S autotiling
@@ -107,34 +106,34 @@ installi3Dwm() {
 }
 
 installKde() {
-		echo -en "1.\tYes\n0.\tNo\nInstall KDE: "; read iKDE
-		if [ $iKDE -eq 1 ]; then
+		echo -en "Install KDE(y,n): "; read iKDE
+		if [ $iKDE = y ]; then
 				sudo pacman -S plasma konsole yakuake dolphin
 				mkdir -p ~/.local/share/kglobalaccel
-				echo -en "1.\tYes\n0.\tNo\nEnable sddm"; read eSddm
-				[ $eSddm -eq 1 ] && sudo systemctl enable sddm
+				echo -n "Enable sddm(y,n): "; read eSddm
+				[ $eSddm = y ] && sudo systemctl enable sddm
 		fi
 }
 
 beforeReboot() {
-		echo -en "1.\tVirtualBox\n2.\tDesktop\n0.\tOther\nEnter Profile: "; read profile
+		echo -en "Enter Profile:\n1.\tVirtualBox\n2.\tDesktop\n0.\tOther\n: "; read profile
 		case $profile in
 				1) 
 						hostname="ArchVB"
 						user="holden"
 						password="0"
 						device="/dev/sda"
-						grubRemovable=0
-						virtualBox=1
-						nvidia=0
-						cpu=1 ;;
+						grubRemovable="n"
+						virtualBox="y"
+						nvidia="n"
+						cpu="i" ;;
 				2)
 						hostname="HT-ArchDesktop"
 						user="holden"
-						grubRemovable=1
-						virtualBox=0
-						nvidia=1
-						cpu=1
+						grubRemovable="y"
+						virtualBox="n"
+						nvidia="y"
+						cpu="i"
 						getPassword
 						getDevice ;;
 				0)
@@ -143,7 +142,7 @@ beforeReboot() {
 						getPassword
 						getDevice
 						getGrubRemovable
-						getVirtualbox
+						getVirtualBox
 						getNvidia
 						getCpu ;;
 		esac
@@ -171,5 +170,5 @@ afterReboot() {
 		rebootNow
 }
 
-getBAReboot
+echo -en "Before or After Reboot:\n1.\tBefore\n2.\tAfter\n: "; read baReboot;
 [ $baReboot -eq 1 ] && beforeReboot || afterReboot

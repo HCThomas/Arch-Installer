@@ -92,6 +92,7 @@ installApps() {
 		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin
 
 		chsh -s /usr/bin/zsh
+		mkdir -p ~/.cache/zsh
 		xdg-user-dirs-update
 		sudo systemctl enable bluetooth
 		sudo systemctl enable cups

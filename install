@@ -89,7 +89,7 @@ rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
 
 installApps() {
 		sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils cups ghostscript ntfs-3g alacritty mpv sxiv p7zip htop neofetch openssh zsh rsync steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl
-		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin
+		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin nerd-fonts-complete lf
 
 		chsh -s /usr/bin/zsh
 		mkdir -p ~/.cache/zsh
@@ -105,7 +105,6 @@ installi3Dwm() {
 		echo -en "Install i3(y,n): "; read iI3
 		if [ $iI3 = y ]; then
 				sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs ttf-font-awesome ttf-joypixels bmon mpd mpc ncmpcpp
-				yay -S nerd-fonts-complete lf
 				sudo pacman -S i3-gaps i3blocks
 				yay -S autotiling
 				cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd

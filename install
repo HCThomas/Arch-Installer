@@ -81,7 +81,7 @@ startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" 
 installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
 cloneDotfiles() { 
 		cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master
-		echo -en "Which dofiles\n1.\tDesktop\n2.\tLaptop"; read lddote
+		echo -en "Which dofiles\n1.\tDesktop\n2.\tLaptop\n: "; read lddote
 		[ $lddote -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
 }
 vimPlugins() { nvim -c PlugInstall -c q -c q;}

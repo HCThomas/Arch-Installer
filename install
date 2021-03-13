@@ -104,7 +104,7 @@ installApps() {
 installi3Dwm() {
 		echo -en "Install i3(y,n): "; read iI3
 		if [ $iI3 = y ]; then
-				sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs noto-fonts noto-fonts-cjk ttf-font-awesome ttf-joypixels bmon mpd mpc ncmpcpp
+				sudo pacman -S i3lock xss-lock brightnessctl playerctl dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs ttf-font-awesome ttf-joypixels bmon mpd mpc ncmpcpp
 				yay -S nerd-fonts-complete lf
 				sudo pacman -S i3-gaps i3blocks
 				yay -S autotiling

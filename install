@@ -97,6 +97,7 @@ installApps() {
 		sudo systemctl enable bluetooth
 		sudo systemctl enable cups
 		sudo systemctl enable nordvpnd
+		sudo systemctl enable ckb-next-daemon
 		sudo gpasswd -a $(whoami) nordvpn
 }
 

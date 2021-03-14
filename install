@@ -89,7 +89,7 @@ rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
 
 installApps() {
 		sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils reflector cups ghostscript ntfs-3g alacritty mpv sxiv p7zip htop neofetch openssh zsh rsync steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl networkmanager-openvpn network-manager-applet
-		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin nerd-fonts-complete lf
+		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin nerd-fonts-complete lf ckb-next
 
 		chsh -s /usr/bin/zsh
 		mkdir -p ~/.cache/zsh

@@ -130,7 +130,7 @@ afterReboot() {
 	vimPlugins() { nvim -c PlugInstall -c q -c q;}
 	installApps() {
 		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g p7zip openssh rsync zsh htop neofetch alacritty mpv sxiv
-		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting nerd-fonts-complete lf
+		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting nerd-fonts-source-code-pro lf
 		chsh -s /usr/bin/zsh
 		mkdir -p ~/.cache/zsh
 		xdg-user-dirs-update

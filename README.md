@@ -5,8 +5,8 @@
 curl -L https://git.io/JqJHf > install && bash install
 ```
 
-## Wifi
-### Before Install
+## Usefull commands
+### Wifi
 ```
 iwctl
 	device list
@@ -18,28 +18,43 @@ iwctl
 ```
 nmtui
 ```
-
-## DualBoot Clock Change
-```
-sudo timedatectl set-local-rtc true --adjust-system-clock
-```
-
-## Bluetooth
+### Bluetooth
 ```
 bluetoothctl
 ```
-
-## Cups printers
+### Printers
 ```
+pacman cups ghostscript
+yay epson-inkjet-printer-escpr
+systemctl enable cups
 localhost:631/admin
 ```
-
-## Mounting drives
+### Mounting drives
 ```
 blkid
 sudo vim /etc/fstab
 UUID="" /run/media/{username}/{drivename} ntfs{type} defaults 0 0
-
 lsblk
 sudo mount /dev/sd?? /run/media/{username}/{drivename}
+```
+### Nordvpn
+```
+yay nordvpn-bin
+systemctl enable nordvpnd
+gpasswd -a $(whoami) nordvpn
+```
+or
+```
+pacman networkmanager-openvpn network-manager-applet
+```
+### RGB
+```
+pacman liquidctl
+yay ckb-next
+systemctl enable ckb-next-daemon
+```
+### Other Programs
+```
+pacman keepassxc code steam discord qbittorrent calibre thunderbird virtualbox
+yay hakuneko-desktop fsearch-git
 ```

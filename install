@@ -1,23 +1,26 @@
-#!/bin/bash
+#!/bin/sh
 
 rebootNow() { echo -n "Reboot(y,n): "; read rebootNow; [ $rebootNow = y ] && reboot;}
 
-getHostName() { echo -n "Enter hostname: "; read hostname;}
-getUserName() { echo -n "Enter username: "; read user;}
-getGrubRemovable() { echo -n "Grub removable installation(y,n): "; read grubRemovable;}
-getVirtualBox() { echo -n "VirtualBox(y,n): "; read virtualBox;}
-getNvidia() { echo -n "Install Nvidia Drivers(y,n): "; read nvidia;}
-getCpu() { echo -en "Intel or AMD cpu:\ni.\tIntel\na.\tAMD\n: "; read cpu;}
-getPassword() {
+beforeReboot() {
+	# Getting user information
+	getHostName() { echo -n "Enter hostname: "; read hostname;}
+	getUserName() { echo -n "Enter username: "; read user;}
+	getGrubRemovable() { echo -n "Grub removable installation(y,n): "; read grubRemovable;}
+	getVirtualBox() { echo -n "VirtualBox(y,n): "; read virtualBox;}
+	getNvidia() { echo -n "Install Nvidia Drivers(y,n): "; read nvidia;}
+	getCpu() { echo -en "Intel or AMD cpu:\n1.\tIntel\n2.\tAMD\n: "; read cpu;}
+	getPassword() {
 		echo -n "Password: "; read -s password
 		echo -en "\nRepeat Password: "; read -s password2
 		[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1
-}
-getDevice() {
+	}
+	getDevice() {
 		lsblk -p; echo -en "\nEnter installation disk(/dev/sd*): "; read device
-}
+	}
 
-diskSetup() {
+	# Installing and configuring base system
+	diskSetup() {
 		echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n+2G\nt\n\n19\n  n\n\n\n\n  w\n" | fdisk $device
 		partBoot="${device}1"
 		partSwap="${device}2"
@@ -29,22 +32,19 @@ diskSetup() {
 		mount $partLinux /mnt
 		mkdir /mnt/boot
 		mount $partBoot /mnt/boot
-}
-
-addUser() {
+	}
+	addUser() {
 		arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
 		sed -i "82 s/^##*//" /mnt/etc/sudoers
 		echo -e "${password}\n${password}" | arch-chroot /mnt passwd
 		echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
-}
-
-systemInstall() {
+	}
+	systemInstall() {
 		pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
 		[ $nvidia = y ] && pacstrap /mnt nvidia nvidia-settings
-		[ $cpu = i ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
-}
-
-systemConfig() {
+		[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
+	}
+	systemConfig() {
 		genfstab -U /mnt >> /etc/fstab
 		arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
 		arch-chroot /mnt hwclock --systohc
@@ -54,133 +54,118 @@ systemConfig() {
 		echo $hostname >> /mnt/etc/hostname
 		echo -e "127.0.0.1\tlocalhost\n::1\t\tlocalhost\n127.0.1.1\t${hostname}.localdomain\t${hostname}" >> /mnt/etc/hosts
 		arch-chroot /mnt systemctl enable NetworkManager
-}
-
-bootLoader() {
+	}
+	bootLoader() {
 		[ $grubRemovable = y ] && arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable || arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
 		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-}
-
-installVirtualbox() { [ $virtualBox = y ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice;}
-
-extraConfig() {
+	}
+	installVirtualbox() { [ $virtualBox = y ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice;}
+	extraConfig() {
 		sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
 		arch-chroot /mnt pacman -Syu
 		sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/" /mnt/etc/default/grub
 		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+	}
+
+	# Adding install script to user home
+	restartScript() { cp install /mnt/home/"$user";}
+
+	# Asking for the user porfile to use
+	echo -en "Enter Profile:\n1.\tVirtualBox\n2.\tDesktop\n0.\tOther\n: "; read profile
+	case $profile in
+		1) 
+			hostname="ArchVB"
+			user="holden"
+			password="0"
+			device="/dev/sda"
+			grubRemovable="n"
+			virtualBox="y"
+			nvidia="n"
+			cpu="1" ;;
+		2)
+			hostname="HT-ArchDesktop"
+			user="holden"
+			grubRemovable="y"
+			virtualBox="n"
+			nvidia="y"
+			cpu="1"
+			getPassword
+			getDevice ;;
+		0)
+			getHostName
+			getUserName
+			getPassword
+			getDevice
+			getGrubRemovable
+			getVirtualBox
+			getNvidia
+			getCpu ;;
+	esac
+
+	# Starting the base install
+	timedatectl set-ntp true
+	diskSetup
+	systemInstall
+	systemConfig
+	installVirtualbox
+	bootLoader
+	addUser
+	extraConfig
+	restartScript
+	rebootNow
 }
 
-restartScript() {
-		cp install /mnt/home/"$user"
-		touch /mnt/home/"$user"/.bash_profile
-		echo "exec bash install" >> /mnt/home/"$user"/.bash_profile
-}
-
-startScript() { touch /mnt/home/"$user"/.bash_profile; echo "exec bash install" >> /mnt/home/"$user"/.bash_profile;}
-
-installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
-cloneDotfiles() { 
-		cd; git init; git remote add origin https://github.com/HCThomas/dotfiles; git fetch; git checkout -ft origin/master
-		echo -en "Which dofiles\n1.\tDesktop\n2.\tLaptop\n: "; read lddote
-		[ $lddote -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
-}
-vimPlugins() { nvim -c PlugInstall -c q -c q;}
-rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
-
-installApps() {
-		sudo pacman -S xorg-server xorg-xinit xorg-xrandr xdg-user-dirs pulseaudio pulseaudio-alsa pamixer pulsemixer alsa-utils pulseaudio-bluetooth bluez bluez-utils reflector cups ghostscript ntfs-3g alacritty mpv sxiv p7zip htop neofetch openssh zsh rsync steam discord qbittorrent calibre keepassxc code thunderbird virtualbox liquidctl networkmanager-openvpn network-manager-applet
-		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting epson-inkjet-printer-escpr hakuneko-desktop nordvpn-bin nerd-fonts-complete lf ckb-next fsearch-git
-
+afterReboot() {
+	fixTime() {
+		echo -n "Are you duelbooting windows(y,n)"; read duelb
+		[ $duelb = y ] && sudo timedatectl set-local-rtc true --adjust-system-clock
+	}
+	installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
+	cloneDotfiles() { 
+		dotfilesURL="https://github.com/HCThomas/dotfiles"
+		cd; git init; git remote add origin $dotfilesURL; git fetch; git checkout -ft origin/master
+		echo -en "Which dotfiles\n1.\tDesktop\n2.\tLaptop\n: "; read pickDotfiles
+		[ $pickDotfiles -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
+	}
+	vimPlugins() { nvim -c PlugInstall -c q -c q;}
+	installApps() {
+		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g p7zip openssh rsync zsh htop neofetch alacritty mpv sxiv
+		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting nerd-fonts-complete lf
 		chsh -s /usr/bin/zsh
 		mkdir -p ~/.cache/zsh
 		xdg-user-dirs-update
 		sudo systemctl enable bluetooth
-		sudo systemctl enable cups
-		sudo systemctl enable nordvpnd
-		sudo systemctl enable ckb-next-daemon
-		sudo gpasswd -a $(whoami) nordvpn
-}
-
-
-installi3Dwm() {
-		echo -en "Install i3(y,n): "; read iI3
-		if [ $iI3 = y ]; then
-				sudo pacman -S i3lock xss-lock brightnessctl dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs ttf-font-awesome ttf-joypixels bmon mpd mpc ncmpcpp
-				sudo pacman -S i3-gaps i3blocks
-				yay -S autotiling
-				cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
+	}
+	installWM() {
+		echo -en "Install i3(y,n): "; read installi3
+		if [ $installi3 = y ]; then
+			sudo pacman -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs ttf-font-awesome ttf-joypixels bmon mpd mpc ncmpcpp
+			yay -S autotiling
+			cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
 		fi
-}
-
-installKde() {
-		echo -en "Install KDE(y,n): "; read iKDE
-		if [ $iKDE = y ]; then
-				sudo pacman -S plasma konsole yakuake dolphin
-				mkdir -p ~/.local/share/kglobalaccel
-				echo -n "Enable sddm(y,n): "; read eSddm
-				[ $eSddm = y ] && sudo systemctl enable sddm
+	}
+	installDE() {
+		echo -en "Install KDE(y,n): "; read installKDE
+		if [ $installKDE = y ]; then
+			sudo pacman -S plasma konsole yakuake dolphin
+			mkdir -p ~/.local/share/kglobalaccel
+			echo -n "Enable sddm(y,n): "; read enableSddm
+			[ $enableSddm = y ] && sudo systemctl enable sddm
 		fi
+	}
+	rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
+
+	fixTime
+	installAur
+	cloneDotfiles
+	vimPlugins
+	installApps
+	installWM
+	installDE
+	rmExtraFiles
+	rebootNow
 }
 
-fixTime() {
-		echo -n "Are you duelbooting windows(y,n)"; read duelb
-		[ $duelb = y ] && sudo timedatectl set-local-rtc true --adjust-system-clock
-}
-
-beforeReboot() {
-		echo -en "Enter Profile:\n1.\tVirtualBox\n2.\tDesktop\n0.\tOther\n: "; read profile
-		case $profile in
-				1) 
-						hostname="ArchVB"
-						user="holden"
-						password="0"
-						device="/dev/sda"
-						grubRemovable="n"
-						virtualBox="y"
-						nvidia="n"
-						cpu="i" ;;
-				2)
-						hostname="HT-ArchDesktop"
-						user="holden"
-						grubRemovable="y"
-						virtualBox="n"
-						nvidia="y"
-						cpu="i"
-						getPassword
-						getDevice ;;
-				0)
-						getHostName
-						getUserName
-						getPassword
-						getDevice
-						getGrubRemovable
-						getVirtualBox
-						getNvidia
-						getCpu ;;
-		esac
-
-		timedatectl set-ntp true
-		diskSetup
-		systemInstall
-		systemConfig
-		installVirtualbox
-		bootLoader
-		addUser
-		extraConfig
-		restartScript
-		rebootNow
-}
-afterReboot() {
-		fixTime
-		installAur
-		cloneDotfiles
-		vimPlugins
-		installApps
-		installi3Dwm
-		installKde
-		rmExtraFiles
-		rebootNow
-}
-
-echo -en "Before or After Reboot:\n1.\tBefore\n2.\tAfter\n: "; read baReboot;
-[ $baReboot -eq 1 ] && beforeReboot || afterReboot
+echo "Welcome to my custom Arch Linux Installer script!!!"
+echo -en "Before or After Reboot:\n1.\tBefore\n2.\tAfter\n: "; read i;
+[ $i -eq 1 ] && beforeReboot || afterReboot

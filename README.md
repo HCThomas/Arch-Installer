@@ -46,6 +46,13 @@ gpasswd -a $(whoami) nordvpn
 or
 ```
 pacman networkmanager-openvpn network-manager-applet
+nm-connection-editor
+import vpn
+vpn settings:
+	add dns servers 103.86.96.100, 103.86.99.100
+connection settings:
+	auto connect to vpn
+	ignore ipv6
 ```
 ### RGB
 ```

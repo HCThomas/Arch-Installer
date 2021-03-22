@@ -127,7 +127,6 @@ afterReboot() {
 		echo -en "Which dotfiles\n1.\tDesktop\n2.\tLaptop\n: "; read pickDotfiles
 		[ $pickDotfiles -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
 	}
-	vimPlugins() { nvim -c PlugInstall -c q -c q;}
 	installApps() {
 		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g p7zip openssh rsync zsh htop neofetch alacritty mpv sxiv
 		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting nerd-fonts-source-code-pro lf
@@ -158,7 +157,6 @@ afterReboot() {
 	fixTime
 	installAur
 	cloneDotfiles
-	vimPlugins
 	installApps
 	installWM
 	installDE

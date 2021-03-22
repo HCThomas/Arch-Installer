@@ -31,10 +31,10 @@ localhost:631/admin
 ```
 ### Mounting drives
 ```
-blkid
+lsblk -f
 sudo vim /etc/fstab
+UUID="{efi}" /boot vfat defaults 0 2
 UUID="" /run/media/{username}/{drivename} ntfs{type} defaults 0 0
-lsblk
 sudo mount /dev/sd?? /run/media/{username}/{drivename}
 ```
 ### Nordvpn

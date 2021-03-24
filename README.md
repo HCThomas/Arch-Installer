@@ -63,5 +63,5 @@ systemctl enable ckb-next-daemon
 ### Other Programs
 ```
 pacman keepassxc code steam discord qbittorrent calibre thunderbird virtualbox
-yay hakuneko-desktop fsearch-git
+yay hakuneko-desktop fsearch-git freefilesync-bin
 ```

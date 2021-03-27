@@ -62,6 +62,6 @@ systemctl enable ckb-next-daemon
 ```
 ### Other Programs
 ```
-pacman keepassxc code steam discord qbittorrent calibre thunderbird virtualbox nextcloud-client
+pacman keepassxc code steam discord qbittorrent calibre thunderbird virtualbox nextcloud-client youtube-dl
 yay hakuneko-desktop fsearch-git freefilesync-bin
 ```

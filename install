@@ -73,7 +73,7 @@ beforeReboot() {
 	# Asking for the user porfile to use
 	echo -en "Enter Profile:\n1.\tVirtualBox\n2.\tDesktop\n0.\tOther\n: "; read profile
 	case $profile in
-		1) 
+		1)
 			hostname="ArchVB"
 			user="holden"
 			password="0"
@@ -121,15 +121,15 @@ afterReboot() {
 		[ $duelb = y ] && sudo timedatectl set-local-rtc true --adjust-system-clock
 	}
 	installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
-	cloneDotfiles() { 
+	cloneDotfiles() {
 		dotfilesURL="https://github.com/HCThomas/dotfiles"
 		cd; git init; git remote add origin $dotfilesURL; git fetch; git checkout -ft origin/master
 		echo -en "Which dotfiles\n1.\tDesktop\n2.\tLaptop\n: "; read pickDotfiles
 		[ $pickDotfiles -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
 	}
 	installApps() {
-		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs noto-fonts-cjk pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g p7zip openssh rsync zsh htop neofetch alacritty mpv sxiv
-		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting nerd-fonts-source-code-pro lf
+		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs noto-fonts-cjk pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv
+		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
 		chsh -s /usr/bin/zsh
 		mkdir -p ~/.cache/zsh
 		xdg-user-dirs-update

@@ -36,6 +36,7 @@ sudo vim /etc/fstab
 UUID="{efi}" /boot vfat defaults 0 2
 UUID="" /run/media/{username}/{drivename} ntfs{type} defaults 0 0
 sudo mount /dev/sd?? /run/media/{username}/{drivename}
+sudo mount //{truenas}/{share} /run/media/{share} -o username={user},uid={user},gid={group}
 ```
 ### Nordvpn
 ```

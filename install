@@ -128,7 +128,7 @@ afterReboot() {
 		[ $pickDotfiles -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
 	}
 	installApps() {
-		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs noto-fonts-cjk pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
+		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs noto-fonts-cjk pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g cifs-utils p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
 		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
 		chsh -s /usr/bin/zsh
 		mkdir -p ~/.cache/zsh

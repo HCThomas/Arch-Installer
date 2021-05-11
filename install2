@@ -1,0 +1,53 @@
+#!/bin/sh
+baseArch() {
+	# Getting user information
+	getHostName() {
+		hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
+		clear
+		: ${hostname:?"hostname cannot be empty"}
+	}
+	getUserName() {
+		user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
+		clear
+		: ${user:?"user cannot be empty"}
+	}
+	getPassword() {
+		password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
+		clear
+		: ${password:?"password cannot be empty"}
+		password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
+		clear
+		[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1
+	}
+	getDevice() {
+		devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
+		device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist}) || exit 1
+		clear
+	}
+	getGrubRemovable() {
+		grubRemovable=$(dialog --stdout --yesno "Grub removable installation" 0 0)
+	}
+	getVirtualBox() {
+		virtualBox=$(dialog --stdout --yesno "Is this a virtualbox installation" 0 0)
+	}
+	getNvidia() {
+		nvidia=$(dialog --stdout --yesno "Install nvidia drivers" 0 0)
+	}
+	getCpu() {
+		cpu=$(dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD")
+	}
+	getHostName
+	getUserName
+	getPassword
+	getDevice
+	getGrubRemovable
+	getVirtualBox
+	getNvidia
+	getCpu
+}
+
+dialog --stdout --title "Welcome" --msgbox "Welcome to Holden's arch install and rice script!" 0 0
+
+i=$(dialog --stdout --menu "Choose one: " 0 0 0 1 "Install base arch system" 2 "Rice your arch system")
+clear
+[ $i -eq 1 ] && baseArch || echo 2

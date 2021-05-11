@@ -3,6 +3,7 @@
 ## Start Installer
 ```
 curl -L https://git.io/JqJHf > install && bash install
+curl -L https://git.io/Jseai > install
 ```
 
 ## Usefull commands

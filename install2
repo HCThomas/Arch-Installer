@@ -99,7 +99,6 @@ rice() {
 
 	# xorg-server - graphical server
 	# xorg-xinit - starts the graphical server
-	# xorg-xrandr - configuring the displays
 	# pulseaudio - audio
 	# pulseaudio-alsa - audio
 	# alsa-utils - audio
@@ -130,7 +129,7 @@ rice() {
 	# A, brave-bin - web browser
 	# A, libxft-bgra - replaces libxfit for fixing some stuff
 	# A, lf - terminal file manager
-	sudo pacman --noconfirm --needed -S xorg-server xorg-xinit xorg-xrandr pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
+	sudo pacman --noconfirm --needed -S xorg-server xorg-xinit pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
 	yay -S --noconfirm brave-bin gotop zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
 	yes | yay -S libxft-bgra
 	chsh -s /usr/bin/zsh

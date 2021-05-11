@@ -20,16 +20,20 @@ baseArch() {
 	device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist})
 	clear
 
-	grubRemovable=$(dialog --stdout --yesno "Grub removable installation" 0 0)
+	dialog --stdout --yesno "Grub removable installation" 0 0
+	grubRemovable=$?
 	clear
 
-	virtualBox=$(dialog --stdout --yesno "Is this a virtualbox installation" 0 0)
+	dialog --stdout --yesno "Is this a virtualbox installation" 0 0
+	virtualBox=$?
 	clear
 
-	nvidia=$(dialog --stdout --yesno "Install nvidia drivers" 0 0)
+	dialog --stdout --yesno "Install nvidia drivers" 0 0
+	nvidia=$?
 	clear
 
-	cpu=$(dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD")
+	dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD"
+	cpu=$?
 	clear
 
 
@@ -83,8 +87,9 @@ baseArch() {
 }
 
 rice() {
-	timeFix=$(dialog --stdout --yesno "If dualbooting windows, fix time" 0 0)
-	[ $timeFix -eq ] && sudo timedatectl set-local-rtc true --adjust-system-clock
+	dialog --stdout --yesno "If dualbooting windows, fix time" 0 0
+	timeFix=$?
+	[ $timeFix -eq 0 ] && sudo timedatectl set-local-rtc true --adjust-system-clock
 
 	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd
 
@@ -151,14 +156,16 @@ rice() {
 	# pcmanfm-gtk3 - gui file manager
 	# gvfs - allows for pcmanfm to show mounted drives
 	# G, dmenu - runs commands
-	installi3=$(dialog --stdout --yesno "Install i3" 0 0)
+	dialog --stdout --yesno "Install i3" 0 0
+	installi3=$?
 	if [ $installi3 -eq 0 ]; then
 		sudo pacman -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs
 		yay -S autotiling
 		cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
 	fi
 
-	installKDE=$(dialog --stdout --yesno "Install KDE" 00)
+	dialog --stdout --yesno "Install KDE" 00
+	installKDE=$?
 	if [ $installKDE -eq 0 ]; then
 		sudo pacman -S plasma konsole yakuake dolphin
 		mkdir -p ~/.local/share/kglobalaccel

@@ -5,7 +5,6 @@ baseArch() {
 	clear
 	: ${hostname:?"hostname cannot be empty"} || exit 1
 
-
 	user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
 	clear
 	: ${user:?"user cannot be empty"}
@@ -51,7 +50,7 @@ baseArch() {
 	mkdir /mnt/boot
 	mount $partBoot /mnt/boot
 
-	pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager git grub efibootmgr
+	pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
 	[ $nvidia -eq 0 ] && pacstrap /mnt nvidia nvidia-settings
 	[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
 
@@ -94,9 +93,9 @@ rice() {
 
 	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd
 
-	dotfilesURL="https://github.com/HCThomas/dotfiles"
 	git clone https://github.com/HCThomas/dotfiles
-	cd dotfiles; cp -rfT * ~; cd
+	cp -rfT dotfiles ~
+	rm README.md .gitignore .git
 
 	# xorg-server - graphical server
 	# xorg-xinit - starts the graphical server
@@ -131,10 +130,12 @@ rice() {
 	# A, brave-bin - web browser
 	# A, libxft-bgra - replaces libxfit for fixing some stuff
 	# A, lf - terminal file manager
-	sudo pacman -S xorg-server xorg-xinit xorg-xrandr pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
-	yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
+	sudo pacman --noconfirm --needed -S xorg-server xorg-xinit xorg-xrandr pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
+	yay -S --noconfirm brave-bin gotop zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
+	yes | yay -S libxft-bgra
 	chsh -s /usr/bin/zsh
 	mkdir -p ~/.cache/zsh
+	rm .bash*
 	xdg-user-dirs-update
 	sudo systemctl enable bluetooth
 
@@ -160,23 +161,22 @@ rice() {
 	dialog --stdout --yesno "Install i3" 0 0
 	installi3=$?
 	if [ $installi3 -eq 0 ]; then
-		sudo pacman -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs
-		yay -S autotiling
+		sudo pacman --noconfirm --needed -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs
+		yay -S --noconfirm autotiling
 		cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
 	fi
 
-	dialog --stdout --yesno "Install KDE" 00
+	dialog --stdout --yesno "Install KDE" 0 0
 	installKDE=$?
 	if [ $installKDE -eq 0 ]; then
-		sudo pacman -S plasma konsole yakuake dolphin
+		sudo pacman --noconfirm --needed -S plasma konsole yakuake dolphin
 		mkdir -p ~/.local/share/kglobalaccel
 		echo -n "Enable sddm(y,n): "; read enableSddm
 		[ $enableSddm = y ] && sudo systemctl enable sddm
 	fi
 }
 
-
-pacman --noconfirm --needed -Sy dialog
+sudo pacman --noconfirm --needed -Sy dialog
 dialog --stdout --title "Welcome" --msgbox "Welcome to Holden's arch install and rice script!" 0 0
 
 i=$(dialog --stdout --menu "Choose one" 0 0 0 1 "Install base arch system" 2 "Rice your arch system") || exit 1

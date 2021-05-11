@@ -32,8 +32,7 @@ baseArch() {
 	nvidia=$?
 	clear
 
-	dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD"
-	cpu=$?
+	cpu=$(dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD")
 	clear
 
 

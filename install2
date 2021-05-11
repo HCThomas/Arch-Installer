@@ -51,11 +51,6 @@ baseArch() {
 	mkdir /mnt/boot
 	mount $partBoot /mnt/boot
 
-	arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
-	sed -i "82 s/^##*//" /mnt/etc/sudoers
-	echo -e "${password}\n${password}" | arch-chroot /mnt passwd
-	echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
-
 	pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager git grub efibootmgr
 	[ $nvidia -eq 0 ] && pacstrap /mnt nvidia nvidia-settings
 	[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
@@ -74,6 +69,11 @@ baseArch() {
 	arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 	[ $virtualBox -eq 0 ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice
+
+	arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
+	sed -i "82 s/^##*//" /mnt/etc/sudoers
+	echo -e "${password}\n${password}" | arch-chroot /mnt passwd
+	echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
 
 	sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
 	arch-chroot /mnt pacman -Syu

@@ -81,7 +81,8 @@ baseArch() {
 
 	cp install /mnt/home/"$user"
 
-	reboot=$(dialog --stdout --yesno "Reboot now" 0 0)
+	dialog --stdout --yesno "Reboot now" 0 0
+	reboot=$?
 	[ $reboot -eq 0 ] && reboot
 }
 

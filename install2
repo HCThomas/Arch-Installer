@@ -1,22 +1,23 @@
 #!/bin/sh
 
 baseArch() {
-	hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0)
+	hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
 	clear
-	: ${hostname:?"hostname cannot be empty"}
+	: ${hostname:?"hostname cannot be empty"} || exit 1
 
-	user=$(dialog --stdout --inputbox "Enter admin username" 0 0)
+
+	user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
 	clear
 	: ${user:?"user cannot be empty"}
 
-	password=$(dialog --stdout --passwordbox "Enter admin password" 0 0)
+	password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
 	clear
 	: ${password:?"password cannot be empty"}
-	password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0)
+	password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
 	clear
 	[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1
 
-	devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac)
+	devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac) || exit 1
 	device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist})
 	clear
 
@@ -32,7 +33,7 @@ baseArch() {
 	nvidia=$?
 	clear
 
-	cpu=$(dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD")
+	cpu=$(dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD") || exit 1
 	clear
 
 
@@ -178,5 +179,5 @@ rice() {
 pacman --noconfirm --needed -Sy dialog
 dialog --stdout --title "Welcome" --msgbox "Welcome to Holden's arch install and rice script!" 0 0
 
-i=$(dialog --stdout --menu "Choose one" 0 0 0 1 "Install base arch system" 2 "Rice your arch system")
+i=$(dialog --stdout --menu "Choose one" 0 0 0 1 "Install base arch system" 2 "Rice your arch system") || exit 1
 [ $i -eq 1 ] && baseArch || rice

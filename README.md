@@ -64,6 +64,11 @@ pacman liquidctl
 yay ckb-next
 systemctl enable ckb-next-daemon
 ```
+### Mount Android Phone
+```
+pacman android-file-transfer
+aft-mtp-mount
+```
 ### Other Programs
 ```
 pacman keepassxc code steam discord qbittorrent calibre thunderbird virtualbox nextcloud-client youtube-dl

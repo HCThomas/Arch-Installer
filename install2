@@ -91,7 +91,7 @@ rice() {
 	timeFix=$?
 	[ $timeFix -eq 0 ] && sudo timedatectl set-local-rtc true --adjust-system-clock
 
-	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd
+	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg --noconfirm -si; cd
 
 	git clone https://github.com/HCThomas/dotfiles
 	cp -rfT dotfiles ~

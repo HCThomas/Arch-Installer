@@ -89,7 +89,18 @@ baseArch() {
 rice() {
 	dialog --stdout --yesno "If dualbooting windows, fix time" 0 0
 	timeFix=$?
+	clear
+	
+	dialog --stdout --yesno "Install i3" 0 0
+	installi3=$?
+	clear
+	
+	dialog --stdout --yesno "Install KDE" 0 0
+	installKDE=$?
+	clear
+	
 	[ $timeFix -eq 0 ] && sudo timedatectl set-local-rtc true --adjust-system-clock
+	clear
 
 	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg --noconfirm -si; cd
 
@@ -157,16 +168,13 @@ rice() {
 	# pcmanfm-gtk3 - gui file manager
 	# gvfs - allows for pcmanfm to show mounted drives
 	# G, dmenu - runs commands
-	dialog --stdout --yesno "Install i3" 0 0
-	installi3=$?
 	if [ $installi3 -eq 0 ]; then
 		sudo pacman --noconfirm --needed -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs
 		yay -S --noconfirm autotiling
 		cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
 	fi
 
-	dialog --stdout --yesno "Install KDE" 0 0
-	installKDE=$?
+
 	if [ $installKDE -eq 0 ]; then
 		sudo pacman --noconfirm --needed -S plasma konsole yakuake dolphin
 		mkdir -p ~/.local/share/kglobalaccel
@@ -177,6 +185,8 @@ rice() {
 
 sudo pacman --noconfirm --needed -Sy dialog
 dialog --stdout --title "Welcome" --msgbox "Welcome to Holden's arch install and rice script!" 0 0
+clear
 
 i=$(dialog --stdout --menu "Choose one" 0 0 0 1 "Install base arch system" 2 "Rice your arch system") || exit 1
+clear
 [ $i -eq 1 ] && baseArch || rice

@@ -2,8 +2,7 @@
 
 ## Start Installer
 ```
-curl -L https://git.io/JqJHf > install && bash install
-curl -L https://git.io/Jseai > install
+curl -L https://git.io/JqJHf > install && sh install
 ```
 
 ## Usefull commands
@@ -43,12 +42,6 @@ sudo mount //{truenas}/{share} /run/media/{share} -o username={user},uid={user},
 ```
 ### Nordvpn
 ```
-yay nordvpn-bin
-systemctl enable nordvpnd
-gpasswd -a $(whoami) nordvpn
-```
-or
-```
 pacman networkmanager-openvpn network-manager-applet
 nm-connection-editor
 import vpn
@@ -61,8 +54,6 @@ connection settings:
 ### RGB
 ```
 pacman liquidctl
-yay ckb-next
-systemctl enable ckb-next-daemon
 ```
 ### Mount Android Phone
 ```

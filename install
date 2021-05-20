@@ -1,169 +1,182 @@
 #!/bin/sh
 
-rebootNow() { echo -n "Reboot(y,n): "; read rebootNow; [ $rebootNow = y ] && reboot;}
+baseArch() {
+	hostname=$(dialog --stdout --inputbox "Enter hostname" 0 0) || exit 1
+	clear
+	: ${hostname:?"hostname cannot be empty"} || exit 1
 
-beforeReboot() {
-	# Getting user information
-	getHostName() { echo -n "Enter hostname: "; read hostname;}
-	getUserName() { echo -n "Enter username: "; read user;}
-	getGrubRemovable() { echo -n "Grub removable installation(y,n): "; read grubRemovable;}
-	getVirtualBox() { echo -n "VirtualBox(y,n): "; read virtualBox;}
-	getNvidia() { echo -n "Install Nvidia Drivers(y,n): "; read nvidia;}
-	getCpu() { echo -en "Intel or AMD cpu:\n1.\tIntel\n2.\tAMD\n: "; read cpu;}
-	getPassword() {
-		echo -n "Password: "; read -s password
-		echo -en "\nRepeat Password: "; read -s password2
-		[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1
-	}
-	getDevice() {
-		lsblk -p; echo -en "\nEnter installation disk(/dev/sd*): "; read device
-	}
+	user=$(dialog --stdout --inputbox "Enter admin username" 0 0) || exit 1
+	clear
+	: ${user:?"user cannot be empty"}
 
-	# Installing and configuring base system
-	diskSetup() {
-		echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n+2G\nt\n\n19\n  n\n\n\n\n  w\n" | fdisk $device
-		partBoot="${device}1"
-		partSwap="${device}2"
-		partLinux="${device}3"
-		mkfs.fat -F 32 $partBoot
-		mkfs.ext4 $partLinux
-		mkswap $partSwap
-		swapon $partSwap
-		mount $partLinux /mnt
-		mkdir /mnt/boot
-		mount $partBoot /mnt/boot
-	}
-	addUser() {
-		arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
-		sed -i "82 s/^##*//" /mnt/etc/sudoers
-		echo -e "${password}\n${password}" | arch-chroot /mnt passwd
-		echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
-	}
-	systemInstall() {
-		pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
-		[ $nvidia = y ] && pacstrap /mnt nvidia nvidia-settings
-		[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
-	}
-	systemConfig() {
-		genfstab -U /mnt >> /etc/fstab
-		arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
-		arch-chroot /mnt hwclock --systohc
-		sed -i "177 s/^##*//" /mnt/etc/locale.gen
-		arch-chroot /mnt locale-gen
-		echo LANG=en_US.UTF-8 >> /mnt/etc/locale.conf
-		echo $hostname >> /mnt/etc/hostname
-		echo -e "127.0.0.1\tlocalhost\n::1\t\tlocalhost\n127.0.1.1\t${hostname}.localdomain\t${hostname}" >> /mnt/etc/hosts
-		arch-chroot /mnt systemctl enable NetworkManager
-	}
-	bootLoader() {
-		[ $grubRemovable = y ] && arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable || arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
-		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-	}
-	installVirtualbox() { [ $virtualBox = y ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice;}
-	extraConfig() {
-		sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
-		arch-chroot /mnt pacman -Syu
-		sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/" /mnt/etc/default/grub
-		arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
-	}
+	password=$(dialog --stdout --passwordbox "Enter admin password" 0 0) || exit 1
+	clear
+	: ${password:?"password cannot be empty"}
+	password2=$(dialog --stdout --passwordbox "Enter admin password again" 0 0) || exit 1
+	clear
+	[ "$password" != "$password2" ] && echo "Passwords did not match" && exit 1
 
-	# Adding install script to user home
-	restartScript() { cp install /mnt/home/"$user";}
+	devicelist=$(lsblk -dplnx size -o name,size | grep -Ev "boot|rpmb|loop" | tac) || exit 1
+	device=$(dialog --stdout --menu "Select installation disk" 0 0 0 ${devicelist})
+	clear
 
-	# Asking for the user porfile to use
-	echo -en "Enter Profile:\n1.\tVirtualBox\n2.\tDesktop\n0.\tOther\n: "; read profile
-	case $profile in
-		1)
-			hostname="ArchVB"
-			user="holden"
-			password="0"
-			device="/dev/sda"
-			grubRemovable="n"
-			virtualBox="y"
-			nvidia="n"
-			cpu="1" ;;
-		2)
-			hostname="HT-ArchDesktop"
-			user="holden"
-			grubRemovable="y"
-			virtualBox="n"
-			nvidia="y"
-			cpu="1"
-			getPassword
-			getDevice ;;
-		0)
-			getHostName
-			getUserName
-			getPassword
-			getDevice
-			getGrubRemovable
-			getVirtualBox
-			getNvidia
-			getCpu ;;
-	esac
+	dialog --stdout --yesno "Grub removable installation" 0 0
+	grubRemovable=$?
+	clear
 
-	# Starting the base install
+	dialog --stdout --yesno "Is this a virtualbox installation" 0 0
+	virtualBox=$?
+	clear
+
+	dialog --stdout --yesno "Install nvidia drivers" 0 0
+	nvidia=$?
+	clear
+
+	cpu=$(dialog --stdout --menu "Choose CPU" 0 0 0 1 "Intel" 2 "AMD") || exit 1
+	clear
+
+
 	timedatectl set-ntp true
-	diskSetup
-	systemInstall
-	systemConfig
-	installVirtualbox
-	bootLoader
-	addUser
-	extraConfig
-	restartScript
-	rebootNow
+
+	echo -e "g\n  n\n\n\n+260M\nt\n1\n  n\n\n\n+2G\nt\n\n19\n  n\n\n\n\n  w\n" | fdisk $device
+	partBoot="${device}1"
+	partSwap="${device}2"
+	partLinux="${device}3"
+	mkfs.fat -F 32 $partBoot
+	mkfs.ext4 $partLinux
+	mkswap $partSwap
+	swapon $partSwap
+	mount $partLinux /mnt
+	mkdir /mnt/boot
+	mount $partBoot /mnt/boot
+
+	pacstrap /mnt base base-devel linux linux-firmware man-db man-pages texinfo networkmanager neovim git grub efibootmgr
+	[ $nvidia -eq 0 ] && pacstrap /mnt nvidia nvidia-settings
+	[ $cpu -eq 1 ] && pacstrap /mnt intel-ucode || pacstrap /mnt amd-ucode
+
+	genfstab -U /mnt >> /etc/fstab
+	arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/New_York /etc/localtime
+	arch-chroot /mnt hwclock --systohc
+	sed -i "177 s/^##*//" /mnt/etc/locale.gen
+	arch-chroot /mnt locale-gen
+	echo LANG=en_US.UTF-8 >> /mnt/etc/locale.conf
+	echo $hostname >> /mnt/etc/hostname
+	echo -e "127.0.0.1\tlocalhost\n::1\t\tlocalhost\n127.0.1.1\t${hostname}.localdomain\t${hostname}" >> /mnt/etc/hosts
+	arch-chroot /mnt systemctl enable NetworkManager
+
+	[ $grubRemovable -eq 0 ] && arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --removable || arch-chroot /mnt grub-install --target=x86_64-efi --efi-directory=boot --bootloader-id=GRUB
+	arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+	[ $virtualBox -eq 0 ] && pacstrap /mnt virtualbox-guest-utils && arch-chroot /mnt systemctl enable vboxservice
+
+	arch-chroot /mnt useradd -m -G wheel,audio,disk,input,kvm,optical,scanner,storage,video $user
+	sed -i "82 s/^##*//" /mnt/etc/sudoers
+	echo -e "${password}\n${password}" | arch-chroot /mnt passwd
+	echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
+
+	sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
+	arch-chroot /mnt pacman -Syu
+	sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/" /mnt/etc/default/grub
+	arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+
+	cp install /mnt/home/"$user"
+
+	dialog --stdout --yesno "Reboot now" 0 0
+	reboot=$?
+	[ $reboot -eq 0 ] && reboot
 }
 
-afterReboot() {
-	fixTime() {
-		echo -n "Are you duelbooting windows(y,n)"; read duelb
-		[ $duelb = y ] && sudo timedatectl set-local-rtc true --adjust-system-clock
-	}
-	installAur() { cd; git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd;}
-	cloneDotfiles() {
-		dotfilesURL="https://github.com/HCThomas/dotfiles"
-		cd; git init; git remote add origin $dotfilesURL; git fetch; git checkout -ft origin/master
-		echo -en "Which dotfiles\n1.\tDesktop\n2.\tLaptop\n: "; read pickDotfiles
-		[ $pickDotfiles -eq 1 ] && cp ~/.config/picom/picom.conf.desktop ~/.config/picom/picom.conf || cp ~/.config/picom/picom.conf.laptop ~/.config/picom/picom.conf
-	}
-	installApps() {
-		sudo pacman -S xorg-server xorg-xinit xorg-xrandr reflector xdg-user-dirs noto-fonts-cjk pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
-		yay -S brave-bin gotop libxft-bgra zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
-		chsh -s /usr/bin/zsh
-		mkdir -p ~/.cache/zsh
-		xdg-user-dirs-update
-		sudo systemctl enable bluetooth
-	}
-	installWM() {
-		echo -en "Install i3(y,n): "; read installi3
-		if [ $installi3 = y ]; then
-			sudo pacman -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs ttf-font-awesome ttf-joypixels
-			yay -S autotiling
-			cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
-		fi
-	}
-	installDE() {
-		echo -en "Install KDE(y,n): "; read installKDE
-		if [ $installKDE = y ]; then
-			sudo pacman -S plasma konsole yakuake dolphin
-			mkdir -p ~/.local/share/kglobalaccel
-			echo -n "Enable sddm(y,n): "; read enableSddm
-			[ $enableSddm = y ] && sudo systemctl enable sddm
-		fi
-	}
-	rmExtraFiles() { rm .bash_history .bash_logout .bash_profile .bashrc;}
+rice() {
+	dialog --stdout --yesno "If dualbooting windows, fix time" 0 0
+	timeFix=$?
+	[ $timeFix -eq 0 ] && sudo timedatectl set-local-rtc true --adjust-system-clock
 
-	fixTime
-	installAur
-	cloneDotfiles
-	installApps
-	installWM
-	installDE
-	rmExtraFiles
-	rebootNow
+	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg -si; cd
+
+	git clone https://github.com/HCThomas/dotfiles
+	cp -rfT dotfiles ~
+	rm README.md .gitignore .git
+
+	# xorg-server - graphical server
+	# xorg-xinit - starts the graphical server
+	# pulseaudio - audio
+	# pulseaudio-alsa - audio
+	# alsa-utils - audio
+	# pulseaudio-bluetooth - bluetooth
+	# bluez - bluetooth
+	# bluez-utils - bluetooth
+	# noto-fonts-cjk - asian fonts
+	# A, nerd-fonts-source-code-pro - terminal fonts
+	# ttf-font-awesome - emojis
+	# ttf-joypixels - emojis
+	# reflector - update pacman mirrors
+	# xdg-user-dirs - creates home directories
+	# ntfs-3g - mounting windows ntfs drives
+	# p7zip - compressing and uncompressing files
+	# openssh - ssh
+	# rsync - syncing
+	# zsh - better shell
+	# A, zsh-fast-syntax-highlighting - zsh shell syntax highlighting
+	# dash - faster scrips
+	# A, dashbinsh - makes dash bin/sh
+	# htop - system monitor
+	# A, gotop - system monitor
+	# neofetch - system information
+	# alacritty - terminal
+	# mpv - video player
+	# sxiv - image view
+	# fzf - terminal fuzzy finder
+	# A, brave-bin - web browser
+	# A, libxft-bgra - replaces libxfit for fixing some stuff
+	# A, lf - terminal file manager
+	sudo pacman --noconfirm --needed -S xorg-server xorg-xinit pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
+	yay -S --noconfirm brave-bin gotop zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
+	yes | yay -S libxft-bgra
+	chsh -s /usr/bin/zsh
+	mkdir -p ~/.cache/zsh
+	rm .bash*
+	xdg-user-dirs-update
+	sudo systemctl enable bluetooth
+
+	# i3-gaps - window manager
+	# A, autotiling - auto tile i3 windows
+	# i3-blocks - i3 bar
+	# i3-lock - lock screen
+	# xss-lock - locking the screen when screen goes off
+	# brightnessctl - chaning screen brightness
+	# pamixer - easer audio commands
+	# pulsemixer - terminal application for audio
+	# dunst - suckless notification system
+	# libnotify - allows for desktop notifications
+	# picom - transparancy
+	# xwallpaper - setting wallpaper
+	# xclip - copying and pasting from commandline
+	# lxappearance - change gtk theme
+	# arc-gtk-theme - arc gtk theme
+	# breeze-icons - breeze icon theme
+	# pcmanfm-gtk3 - gui file manager
+	# gvfs - allows for pcmanfm to show mounted drives
+	# G, dmenu - runs commands
+	dialog --stdout --yesno "Install i3" 0 0
+	installi3=$?
+	if [ $installi3 -eq 0 ]; then
+		sudo pacman --noconfirm --needed -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs
+		yay -S --noconfirm autotiling
+		cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
+	fi
+
+	dialog --stdout --yesno "Install KDE" 0 0
+	installKDE=$?
+	if [ $installKDE -eq 0 ]; then
+		sudo pacman --noconfirm --needed -S plasma konsole yakuake dolphin
+		mkdir -p ~/.local/share/kglobalaccel
+		echo -n "Enable sddm(y,n): "; read enableSddm
+		[ $enableSddm = y ] && sudo systemctl enable sddm
+	fi
 }
 
-echo "Welcome to my custom Arch Linux Installer script!!!"
-echo -en "Before or After Reboot:\n1.\tBefore\n2.\tAfter\n: "; read i;
-[ $i -eq 1 ] && beforeReboot || afterReboot
+sudo pacman --noconfirm --needed -Sy dialog
+dialog --stdout --title "Welcome" --msgbox "Welcome to Holden's arch install and rice script!" 0 0
+
+i=$(dialog --stdout --menu "Choose one" 0 0 0 1 "Install base arch system" 2 "Rice your arch system") || exit 1
+[ $i -eq 1 ] && baseArch || rice

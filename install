@@ -90,15 +90,15 @@ rice() {
 	dialog --stdout --yesno "If dualbooting windows, fix time" 0 0
 	timeFix=$?
 	clear
-	
+
 	dialog --stdout --yesno "Install i3" 0 0
 	installi3=$?
 	clear
-	
+
 	dialog --stdout --yesno "Install KDE" 0 0
 	installKDE=$?
 	clear
-	
+
 	[ $timeFix -eq 0 ] && sudo timedatectl set-local-rtc true --adjust-system-clock
 	clear
 
@@ -140,8 +140,9 @@ rice() {
 	# A, brave-bin - web browser
 	# A, libxft-bgra - replaces libxfit for fixing some stuff
 	# A, lf - terminal file manager
+	# A, vidir - bulk rename on directories
 	sudo pacman --noconfirm --needed -S xorg-server xorg-xinit pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
-	yay -S --noconfirm brave-bin gotop zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf
+	yay -S --noconfirm brave-bin gotop zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf vidir
 	yes | yay -S libxft-bgra
 	chsh -s /usr/bin/zsh
 	mkdir -p ~/.cache/zsh

@@ -2,7 +2,7 @@
 
 ## Start Installer
 ```
-curl -L https://git.io/JqJHf > install && sh install
+curl -L https://git.io/JsKLi > install && sh install
 ```
 
 ## Usefull commands

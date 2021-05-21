@@ -137,11 +137,12 @@ rice() {
 	# mpv - video player
 	# sxiv - image view
 	# fzf - terminal fuzzy finder
+	# bc - terminal calculator
 	# A, brave-bin - web browser
 	# A, libxft-bgra - replaces libxfit for fixing some stuff
 	# A, lf - terminal file manager
 	# A, vidir - bulk rename on directories
-	sudo pacman --noconfirm --needed -S xorg-server xorg-xinit pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf
+	sudo pacman --noconfirm --needed -S xorg-server xorg-xinit pulseaudio pulseaudio-alsa alsa-utils pulseaudio-bluetooth bluez bluez-utils noto-fonts-cjk ttf-font-awesome ttf-joypixels reflector xdg-user-dirs ntfs-3g p7zip openssh rsync zsh dash htop neofetch alacritty mpv sxiv fzf bc
 	yay -S --noconfirm brave-bin gotop zsh-fast-syntax-highlighting dashbinsh nerd-fonts-source-code-pro lf vidir
 	yes | yay -S libxft-bgra
 	chsh -s /usr/bin/zsh

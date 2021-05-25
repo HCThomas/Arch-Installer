@@ -151,6 +151,13 @@ rice() {
 	xdg-user-dirs-update
 	sudo systemctl enable bluetooth
 
+	sudo pacman --noconfirm --needed -S slock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip arc-gtk-theme breeze-icons pcmanfm-gtk gvfs
+	mkdir ~/.local/src
+	git clone https://github.com/HCThomas/dmenu ~/.local/src && cd ~/.local/src/dmenu && sudo make clean install && cd
+	git clone https://github.com/HCThomas/dwm ~/.local/src && cd ~/.local/src/dwm && sudo make clean install && cd
+	git clone https://github.com/HCThomas/dwmblocks ~/.lcal/src && cd ~/.local/src/dwmblocks && sudo make clean install && cd
+	git clone https://github.com/HCThomas/lukest ~/.lcal/src && cd ~/.local/src/lukest && sudo make clean install && cd
+
 	# i3-gaps - window manager
 	# A, autotiling - auto tile i3 windows
 	# i3-blocks - i3 bar
@@ -176,15 +183,8 @@ rice() {
 	if [ $installi3 -eq 0 ]; then
 		sudo pacman --noconfirm --needed -S i3-gaps i3blocks i3lock xss-lock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip lxappearance arc-gtk-theme breeze-icons pcmanfm-gtk3 gvfs
 		yay -S --noconfirm autotiling
-		cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
 	fi
 
-	if [ $installdwm -eq 0 ]; then
-		sudo pacman --noconfirm --needed -S slock brightnessctl pamixer pulsemixer dunst libnotify picom xwallpaper xclip arc-gtk-theme breeze-icons pcmanfm-gtk gvfs
-		cd ~/.config && git clone https://github.com/HCThomas/dmenu && cd dmenu && sudo make clean install && cd
-		cd ~/.config && git clone https://github.com/HCThomas/dwm && cd dwm && sudo make clean install && cd
-		cd ~/.config && git clone https://github.com/HCThomas/dwmblocks && cd dwmblocks && sudo make clean install && cd
-	fi
 
 	if [ $installKDE -eq 0 ]; then
 		sudo pacman --noconfirm --needed -S plasma konsole yakuake dolphin

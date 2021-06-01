@@ -39,6 +39,7 @@ sudo mount /dev/sd?? /run/media/{username}/{drivename}
 
 pacman cifs-utils
 sudo mount //{truenas}/{share} /run/media/{share} -o username={user},uid={user},gid={group}
+//{truenas}/{share} /run/media/Truenas cifs username={user},password={password},uid={user},gid={group} 0 0
 ```
 ### Nordvpn
 ```

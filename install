@@ -74,7 +74,7 @@ baseArch() {
 	echo -e "${password}\n${password}" | arch-chroot /mnt passwd
 	echo -e "${password}\n${password}" | arch-chroot /mnt passwd $user
 
-	sed -i "33 s/^##*//;92,93 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
+	sed -i "33 s/^##*//;94,95 s/^##*//;37i ILoveCandy" /mnt/etc/pacman.conf
 	arch-chroot /mnt pacman -Syu
 	sed -i "s/GRUB_TIMEOUT=5/GRUB_TIMEOUT=1/" /mnt/etc/default/grub
 	arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
@@ -102,7 +102,7 @@ rice() {
 	[ $timeFix -eq 0 ] && sudo timedatectl set-local-rtc true --adjust-system-clock
 	clear
 
-	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg --noconfirm -si; cd
+	git clone https://aur.archlinux.org/yay.git; cd yay; makepkg --noconfirm -si; cd; rm -rf yay
 
 	git clone https://github.com/HCThomas/dotfiles
 	cp -rfT dotfiles ~
